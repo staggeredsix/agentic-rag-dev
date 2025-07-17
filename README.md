@@ -12,7 +12,7 @@
 
 ### Inference Your Way
 - **Free Endpoints**: use free endpoints on build.nvidia.com
-- **Self-Hosted**: Point to Ollama or NIM on your own GPUs
+- **Self-Hosted**: Point to a lightweight Ollama container on your own GPUs
 
 ## Get Started 
 
@@ -97,8 +97,8 @@ This application is a quick prototype and not a robust piece of software. So the
 ### See [Full Advanced Mode Instructions Here](agentic-rag-docs/self-host.md).
 Use these details if you want to modify the application, e.g. by configuring prompts, adding your own endpoints, changing the Gradio app or whatever else occurs to you.
 
-1. Set up a Linux box with an NVIDIA GPU and Docker.  
-2. Deploy an Ollama container or an NVIDIA NIM on that host.  
+1. Set up a Linux box with an NVIDIA GPU and Docker.
+2. Deploy a lightweight Ollama container on that host.
 3. Configure the chat app to use the self-hosted endpoint.
 
 
