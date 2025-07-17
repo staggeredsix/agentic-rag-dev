@@ -21,38 +21,25 @@ from typing import List, Mapping, Optional, Any
 from chatui.utils import gpu_compatibility
 import os
 
-
 class CustomChatOpenAI(BaseChatModel):
-    """Custom class for using LangChain with OpenAI-compatible endpoints such as Ollama."""
+    """ This is a custom built class for using LangChain to chat with custom OpenAI API-compatible endpoints, eg. NIMs. """
 
-    custom_endpoint: str = Field(
-        None, description="Endpoint of remotely running Ollama container"
-    )
-    port: Optional[str] = "8000"
-    model_name: Optional[str] = "meta/llama-3.1-8b-instruct"
+    custom_endpoint: str = Field(None, description='Endpoint of remotely running NIM')
+    port: Optional[str] = "11434"
+    model_name: Optional[str] = "llama2:7b"
     temperature: Optional[float] = 0.0
     gpu_type: Optional[str] = None
     gpu_count: Optional[str] = None
 
-    def __init__(
-        self,
-        custom_endpoint,
-        port="8000",
-        model_name="meta/llama-3.1-8b-instruct",
-        gpu_type=None,
-        gpu_count=None,
-        temperature=0.0,
-        **kwargs,
-    ):
+    def __init__(self, custom_endpoint, port="11434", model_name="llama2:7b",
+                 gpu_type=None, gpu_count=None, temperature=0.0, **kwargs):
         super().__init__(**kwargs)
         if gpu_type and gpu_count:
             compatibility = gpu_compatibility.get_compatible_models(gpu_type, gpu_count)
             if compatibility["warning_message"]:
                 raise ValueError(compatibility["warning_message"])
             if model_name not in compatibility["compatible_models"]:
-                raise ValueError(
-                    f"Model {model_name} is not compatible with {gpu_type} ({gpu_count} GPUs)"
-                )
+                raise ValueError(f"Model {model_name} is not compatible with {gpu_type} ({gpu_count} GPUs)")
         self.custom_endpoint = custom_endpoint
         self.port = port
         self.model_name = model_name
@@ -62,46 +49,45 @@ class CustomChatOpenAI(BaseChatModel):
 
     @property
     def _llm_type(self) -> str:
-        return "llama"
-
+        return 'llama'
+        
     def _generate(self, messages, stop=None, run_manager=None, **kwargs):
         response = self._call_custom_endpoint(messages)
         return self._create_chat_result(response)
-
+    
     def _call_custom_endpoint(self, messages, **kwargs):
         import openai
         import json
-
+        
         openai.api_key = os.getenv("OPENAI_API_KEY", "xyz")  # Better API key handling
         openai.base_url = f"http://{self.custom_endpoint}:{self.port}/v1/"
-
+        
         obj = json.loads(dumps(messages))
-
+        
         config = {
             "model": self.model_name,
             "messages": [{"role": "user", "content": obj[0]["kwargs"]["content"]}],
             "temperature": self.temperature,
         }
-
+        
         if self.gpu_type and self.gpu_count:
-            config["gpu_config"] = {"type": self.gpu_type, "count": self.gpu_count}
-
+            config["gpu_config"] = {
+                "type": self.gpu_type,
+                "count": self.gpu_count
+            }
+        
         try:
             response = openai.chat.completions.create(**config)
             return response
         except Exception as e:
             if self.gpu_type and self.gpu_count:
-                raise ValueError(
-                    f"Error with GPU configuration ({self.gpu_type}, {self.gpu_count} GPUs): {str(e)}"
-                )
+                raise ValueError(f"Error with GPU configuration ({self.gpu_type}, {self.gpu_count} GPUs): {str(e)}")
             raise e
-
+    
     def _create_chat_result(self, response):
         from langchain_core.messages import ChatMessage
         from langchain_core.outputs import ChatResult, ChatGeneration
-
-        message = ChatMessage(
-            content=response.choices[0].message.content, role="assistant"
-        )
+        
+        message = ChatMessage(content=response.choices[0].message.content, role="assistant")
         generation = ChatGeneration(message=message)
         return ChatResult(generations=[generation])

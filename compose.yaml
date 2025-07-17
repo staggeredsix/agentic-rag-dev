@@ -14,12 +14,12 @@ services:
     ports:
       - "11434:11434"
     volumes:
-      - type: volume
-        source: ollama_data
-        target: /root/.ollama
-
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+      
 networks:
   default:
     name: agentic-rag
+
 volumes:
   ollama_data:
