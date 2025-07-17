@@ -333,23 +333,23 @@ def build_page(client: chat_client.ChatClient) -> gr.Blocks:
                                         
                                         with gr.Row():
                                             nim_router_ip = gr.Textbox(
-                                                value = "agentic-rag-local-nim-1",
+                                                value = "ollama",
                                                 label=HOST_NAME,
                                                 info="Local microservice OR IP address running a remote microservice",
                                                 elem_id="rag-inputs",
                                                 scale=2
                                             )
                                             nim_router_port = gr.Textbox(
-                                                placeholder="8000",
+                                                placeholder="11434",
                                                 label=HOST_PORT,
-                                                info="Optional, (default: 8000)",
+                                                info="Optional, (default: 11434)",
                                                 elem_id="rag-inputs",
                                                 scale=1
                                             )
                                         nim_router_id = gr.Textbox(
-                                            placeholder = "meta/llama-3.1-8b-instruct",
+                                            placeholder = "llama2:7b",
                                             label=HOST_MODEL,
-                                            info="If none specified, defaults to: meta/llama-3.1-8b-instruct",
+                                            info="If none specified, defaults to: llama2:7b",
                                             elem_id="rag-inputs",
                                             interactive=True
                                         )
@@ -408,23 +408,23 @@ def build_page(client: chat_client.ChatClient) -> gr.Blocks:
                                         
                                         with gr.Row():
                                             nim_retrieval_ip = gr.Textbox(
-                                                value = "agentic-rag-local-nim-1",
+                                                value = "ollama",
                                                 label=HOST_NAME,
                                                 info="Local microservice OR IP address running a remote microservice",
                                                 elem_id="rag-inputs",
                                                 scale=2
                                             )
                                             nim_retrieval_port = gr.Textbox(
-                                                placeholder="8000",
+                                                placeholder="11434",
                                                 label=HOST_PORT,
-                                                info="Optional, (default: 8000)",
+                                                info="Optional, (default: 11434)",
                                                 elem_id="rag-inputs",
                                                 scale=1
                                             )
                                         nim_retrieval_id = gr.Textbox(
-                                            placeholder = "meta/llama-3.1-8b-instruct",
+                                            placeholder = "llama2:7b",
                                             label=HOST_MODEL,
-                                            info="If none specified, defaults to: meta/llama-3.1-8b-instruct",
+                                            info="If none specified, defaults to: llama2:7b",
                                             elem_id="rag-inputs",
                                             interactive=True
                                         )                                        
@@ -482,23 +482,23 @@ def build_page(client: chat_client.ChatClient) -> gr.Blocks:
                                         
                                         with gr.Row():
                                             nim_generator_ip = gr.Textbox(
-                                                value = "agentic-rag-local-nim-1",
+                                                value = "ollama",
                                                 label=HOST_NAME,
                                                 info="Local microservice OR IP address running a remote microservice",
                                                 elem_id="rag-inputs",
                                                 scale=2
                                             )
                                             nim_generator_port = gr.Textbox(
-                                                placeholder="8000",
+                                                placeholder="11434",
                                                 label=HOST_PORT,
-                                                info="Optional, (default: 8000)",
+                                                info="Optional, (default: 11434)",
                                                 elem_id="rag-inputs",
                                                 scale=1
                                             )
                                         nim_generator_id = gr.Textbox(
-                                            placeholder = "meta/llama-3.1-8b-instruct",
+                                            placeholder = "llama2:7b",
                                             label=HOST_MODEL,
-                                            info="If none specified, defaults to: meta/llama-3.1-8b-instruct",
+                                            info="If none specified, defaults to: llama2:7b",
                                             elem_id="rag-inputs",
                                             interactive=True
                                         )
@@ -556,23 +556,23 @@ def build_page(client: chat_client.ChatClient) -> gr.Blocks:
                                         
                                         with gr.Row():
                                             nim_hallucination_ip = gr.Textbox(
-                                                value = "agentic-rag-local-nim-1",
+                                                value = "ollama",
                                                 label=HOST_NAME,
                                                 info="Local microservice OR IP address running a remote microservice",
                                                 elem_id="rag-inputs",
                                                 scale=2
                                             )
                                             nim_hallucination_port = gr.Textbox(
-                                                placeholder="8000",
+                                                placeholder="11434",
                                                 label=HOST_PORT,
-                                                info="Optional, (default: 8000)",
+                                                info="Optional, (default: 11434)",
                                                 elem_id="rag-inputs",
                                                 scale=1
                                             )
                                         nim_hallucination_id = gr.Textbox(
-                                            placeholder = "meta/llama-3.1-8b-instruct",
+                                            placeholder = "llama2:7b",
                                             label=HOST_MODEL,
-                                            info="If none specified, defaults to: meta/llama-3.1-8b-instruct",
+                                            info="If none specified, defaults to: llama2:7b",
                                             elem_id="rag-inputs",
                                             interactive=True
                                         )
@@ -630,23 +630,23 @@ def build_page(client: chat_client.ChatClient) -> gr.Blocks:
                                         
                                         with gr.Row():
                                             nim_answer_ip = gr.Textbox(
-                                                value = "agentic-rag-local-nim-1",
+                                                value = "ollama",
                                                 label=HOST_NAME,
                                                 info="Local microservice OR IP address running a remote microservice",
                                                 elem_id="rag-inputs",
                                                 scale=2
                                             )
                                             nim_answer_port = gr.Textbox(
-                                                placeholder="8000",
+                                                placeholder="11434",
                                                 label=HOST_PORT,
-                                                info="Optional, (default: 8000)",
+                                                info="Optional, (default: 11434)",
                                                 elem_id="rag-inputs",
                                                 scale=1
                                             )
                                         nim_answer_id = gr.Textbox(
-                                            placeholder = "meta/llama-3.1-8b-instruct",
+                                            placeholder = "llama2:7b",
                                             label=HOST_MODEL,
-                                            info="If none specified, defaults to: meta/llama-3.1-8b-instruct",
+                                            info="If none specified, defaults to: llama2:7b",
                                             elem_id="rag-inputs",
                                             interactive=True
                                             )   
