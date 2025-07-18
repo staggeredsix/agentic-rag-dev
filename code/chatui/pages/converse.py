@@ -347,9 +347,9 @@ def build_page(client: chat_client.ChatClient) -> gr.Blocks:
                                                 scale=1
                                             )
                                         nim_router_id = gr.Textbox(
-                                            placeholder = "llama2:7b",
+                                            placeholder = "llama3:8b-instruct",
                                             label=HOST_MODEL,
-                                            info="If none specified, defaults to: llama2:7b",
+                                            info="If none specified, defaults to: llama3:8b-instruct",
                                             elem_id="rag-inputs",
                                             interactive=True
                                         )
@@ -422,9 +422,9 @@ def build_page(client: chat_client.ChatClient) -> gr.Blocks:
                                                 scale=1
                                             )
                                         nim_retrieval_id = gr.Textbox(
-                                            placeholder = "llama2:7b",
+                                            placeholder = "llama3:8b-instruct",
                                             label=HOST_MODEL,
-                                            info="If none specified, defaults to: llama2:7b",
+                                            info="If none specified, defaults to: llama3:8b-instruct",
                                             elem_id="rag-inputs",
                                             interactive=True
                                         )                                        
@@ -496,9 +496,9 @@ def build_page(client: chat_client.ChatClient) -> gr.Blocks:
                                                 scale=1
                                             )
                                         nim_generator_id = gr.Textbox(
-                                            placeholder = "llama2:7b",
+                                            placeholder = "llama3:8b-instruct",
                                             label=HOST_MODEL,
-                                            info="If none specified, defaults to: llama2:7b",
+                                            info="If none specified, defaults to: llama3:8b-instruct",
                                             elem_id="rag-inputs",
                                             interactive=True
                                         )
@@ -570,9 +570,9 @@ def build_page(client: chat_client.ChatClient) -> gr.Blocks:
                                                 scale=1
                                             )
                                         nim_hallucination_id = gr.Textbox(
-                                            placeholder = "llama2:7b",
+                                            placeholder = "llama3:8b-instruct",
                                             label=HOST_MODEL,
-                                            info="If none specified, defaults to: llama2:7b",
+                                            info="If none specified, defaults to: llama3:8b-instruct",
                                             elem_id="rag-inputs",
                                             interactive=True
                                         )
@@ -644,9 +644,9 @@ def build_page(client: chat_client.ChatClient) -> gr.Blocks:
                                                 scale=1
                                             )
                                         nim_answer_id = gr.Textbox(
-                                            placeholder = "llama2:7b",
+                                            placeholder = "llama3:8b-instruct",
                                             label=HOST_MODEL,
-                                            info="If none specified, defaults to: llama2:7b",
+                                            info="If none specified, defaults to: llama3:8b-instruct",
                                             elem_id="rag-inputs",
                                             interactive=True
                                             )   
