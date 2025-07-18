@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from langchain_openai import ChatOpenAI
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.load.dump import dumps
 from pydantic import Field
@@ -25,13 +24,13 @@ class CustomChatOpenAI(BaseChatModel):
     """ This is a custom built class for using LangChain to chat with custom OpenAI API-compatible endpoints, eg. NIMs. """
 
     custom_endpoint: str = Field(None, description='Endpoint of remotely running NIM')
-    port: Optional[str] = "8000"
-    model_name: Optional[str] = "meta/llama-3.1-8b-instruct"
+    port: Optional[str] = "11434"
+    model_name: Optional[str] = "llama2:7b"
     temperature: Optional[float] = 0.0
     gpu_type: Optional[str] = None
     gpu_count: Optional[str] = None
 
-    def __init__(self, custom_endpoint, port="8000", model_name="meta/llama-3.1-8b-instruct", 
+    def __init__(self, custom_endpoint, port="11434", model_name="llama2:7b",
                  gpu_type=None, gpu_count=None, temperature=0.0, **kwargs):
         super().__init__(**kwargs)
         if gpu_type and gpu_count:

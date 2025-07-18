@@ -125,8 +125,6 @@ execution:
             requested: 0
         sharedMemoryMB: 1024
     secrets:
-        - variable: NVIDIA_API_KEY
-          description: NVIDIA API Key for accessing the API catalog
         - variable: TAVILY_API_KEY
           description: Tavily Search API Key
     mounts:
