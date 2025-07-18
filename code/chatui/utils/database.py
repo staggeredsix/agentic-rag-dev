@@ -33,6 +33,9 @@ import mimetypes
 
 # Default model for local embeddings
 EMBEDDINGS_MODEL = 'llama2'
+# Base URL for the Ollama service. Defaults to the service name used in the
+# docker compose network.
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://ollama:11434")
 
 # Set the chunk size and overlap for the text splitter. Uses defaults but allows them to be set as environment variables.
 DEFAULT_CHUNK_SIZE = 250
@@ -111,7 +114,8 @@ def upload(urls: List[str]):
         vectorstore = Chroma.from_documents(
             documents=doc_splits,
             collection_name="rag-chroma",
-            embedding=OllamaEmbeddings(model=EMBEDDINGS_MODEL),
+            embedding=OllamaEmbeddings(model=EMBEDDINGS_MODEL,
+                                       base_url=OLLAMA_BASE_URL),
             persist_directory="/project/data",
         )
         return vectorstore
@@ -170,7 +174,8 @@ def embed_documents(doc_splits: List[Any]):
         vectorstore = Chroma.from_documents(
             documents=doc_splits,
             collection_name="rag-chroma",
-            embedding=OllamaEmbeddings(model=EMBEDDINGS_MODEL),
+            embedding=OllamaEmbeddings(model=EMBEDDINGS_MODEL,
+                                       base_url=OLLAMA_BASE_URL),
             persist_directory="/project/data",
         )
         return vectorstore
@@ -216,7 +221,8 @@ def _clear(
         # Clear the collection via Chroma client
         vectorstore = Chroma(
             collection_name=collection_name,
-            embedding_function=OllamaEmbeddings(model=EMBEDDINGS_MODEL),
+            embedding_function=OllamaEmbeddings(model=EMBEDDINGS_MODEL,
+                                                 base_url=OLLAMA_BASE_URL),
             persist_directory=persist_directory,
         )
         vectorstore._client.delete_collection(name=collection_name)
@@ -259,7 +265,8 @@ def get_retriever():
     """ This is a helper function for returning the retriever object of the vector store. """
     vectorstore = Chroma(
         collection_name="rag-chroma",
-        embedding_function=OllamaEmbeddings(model=EMBEDDINGS_MODEL),
+        embedding_function=OllamaEmbeddings(model=EMBEDDINGS_MODEL,
+                                            base_url=OLLAMA_BASE_URL),
         persist_directory="/project/data",
     )
     retriever = vectorstore.as_retriever()
