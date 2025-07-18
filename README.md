@@ -11,8 +11,7 @@
 - **Look and Feel**: Change the agent and UI by editing the code yourself
 
 ### Inference Your Way
-- **Free Endpoints**: use free endpoints on build.nvidia.com
-- **Self-Hosted**: Point to a lightweight Ollama container on your own GPUs
+- **Self-Hosted**: Uses a local Ollama container by default
 
 ## Get Started 
 
@@ -26,15 +25,14 @@
 > You can run Agentic RAG without Workbench, but this README requires [NVIDIA AI Workbench](https://www.nvidia.com/en-us/deep-learning-ai/solutions/data-science/workbench/) installed.
 > See [how to install it here](https://docs.nvidia.com/ai-workbench/user-guide/latest/installation/overview.html).
 
-> You need internet because Agentic RAG uses an NVIDIA endpoint for document embedding.
+> You need internet because Agentic RAG relies on Tavily for web search results.
 
 ### Easy Mode (< 5 minutes if Workbench installed)
-1. Get NVIDIA and Tavily API keys:  
-   - ``NVIDIA_API_KEY`` → [Generate](https://org.ngc.nvidia.com/setup/api-keys)  See instructions [here](https://docs.nvidia.com/ai-enterprise/deployment/spark-rapids-accelerator/latest/appendix-ngc.html).
-   - ``TAVILY_API_KEY`` → [Generate](https://tavily.com)  
+1. Get a Tavily API key:
+   - ``TAVILY_API_KEY`` → [Generate](https://tavily.com)
 2. **Clone** this repo with AI Workbench > [configure the keys](https://docs.nvidia.com/ai-workbench/user-guide/latest/environment/variables.html#basic-usage-for-environment-variables) when prompted.  
 3. Click **Open Chat** > Go to the **Document** tab in the web app > Click **Add to Context**.  
-4. Type in your question > Hit enter - answers come from free cloud endpoints.
+4. Type in your question > Hit enter - answers come from your local Ollama model.
 
 ## Details for the README Modes
 <details>
@@ -49,7 +47,7 @@
 |------|--------------------|-------------|
 | 1. Open the Desktop App > Select [local](https://docs.nvidia.com/ai-workbench/user-guide/latest/locations/locations.html). | Probably a  Docker Desktop issue (if selected on install). **Fix**:  See [troubleshooting here](https://docs.nvidia.com/ai-workbench/user-guide/latest/troubleshooting/troubleshooting.html) | <p align="center"><img src="./data/readme-images/desktop-icon.png" width="120" alt="Desktop App Icon"></p> |
 | 2. Click **Clone Project** > Paste repository [URL](https://github.com/NVIDIA/workbench-example-agentic-rag) > **Clone** | Incorrect URL. **Fix**: use the correct URL. | <img src="./data/readme-images/clone-button.png" width="250" height="auto" alt="Clone Button"> |
-| 3. Click **Resolve Now** > Enter NVIDIA and Tavily API keys. | You don't see the banner. **Fix**: go to **Project Container > Variables > Configure** for API keys. See [docs here](https://docs.nvidia.com/ai-workbench/user-guide/latest/environment/variables.html) | <img src="./data/readme-images/resolve-now.png" width="200" height="auto" alt="Resolve Now Warning"> |
+| 3. Click **Resolve Now** > Enter your Tavily API key. | You don't see the banner. **Fix**: go to **Project Container > Variables > Configure** for API keys. See [docs here](https://docs.nvidia.com/ai-workbench/user-guide/latest/environment/variables.html) | <img src="./data/readme-images/resolve-now.png" width="200" height="auto" alt="Resolve Now Warning"> |
 | 4. Click **Open Chat**. | Very little can go wrong here | <img src="./data/readme-images/open-chat-screen-shot.png" width="250" height="auto" alt="Open Chat Button"> |
 | 5. Click **Documents > Create Context**. | Incorrect API key. Fix per Step 3 above. | <img src="./data/readme-images/add-to-context-button.png" width="300" height="auto" alt="Add to Context Button"> |
 | 6. Type question > Hit  enter. |  Incorrect API key. Fix per Step 3 above. | <img src="./data/readme-images/hit-enter.png" width="200" height="auto" alt="Chat Text"> |
@@ -97,8 +95,8 @@ This application is a quick prototype and not a robust piece of software. So the
 ### See [Full Advanced Mode Instructions Here](agentic-rag-docs/self-host.md).
 Use these details if you want to modify the application, e.g. by configuring prompts, adding your own endpoints, changing the Gradio app or whatever else occurs to you.
 
-1. Set up a Linux box with an NVIDIA GPU and Docker.
-2. Deploy a lightweight Ollama container on that host.
+1. Set up a Linux box with an NVIDIA GPU and Docker.  
+2. Deploy an Ollama container or an NVIDIA NIM on that host.  
 3. Configure the chat app to use the self-hosted endpoint.
 
 

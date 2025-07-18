@@ -21,7 +21,7 @@ from langchain_community.document_loaders import (
     CSVLoader 
 )
 from langchain_community.vectorstores import Chroma
-from langchain_nvidia_ai_endpoints import NVIDIAEmbeddings
+from langchain_community.embeddings import OllamaEmbeddings
 
 from typing import Any, Dict, List, Tuple, Union
 from urllib.parse import urlparse
@@ -31,12 +31,8 @@ import mimetypes
 
 
 
-# Handling which API to use based on public vs NVIDIA internal
-# Check if the INTERNAL_API environment variable is set to yes. Don't set if not NVIDIA employee, as you can't access them.
-INTERNAL_API = os.getenv('INTERNAL_API', 'no')
-
-# Default model for public embedding
-EMBEDDINGS_MODEL = 'NV-Embed-QA'
+# Default model for local embeddings
+EMBEDDINGS_MODEL = 'llama2'
 
 # Set the chunk size and overlap for the text splitter. Uses defaults but allows them to be set as environment variables.
 DEFAULT_CHUNK_SIZE = 250
@@ -46,15 +42,6 @@ CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", DEFAULT_CHUNK_SIZE))
 CHUNK_OVERLAP = int(os.getenv("CHUNK_OVERLAP", DEFAULT_CHUNK_OVERLAP))
 
 
-if INTERNAL_API == 'yes':
-    # NVIDIA employees can use internal endpoints
-    EMBEDDINGS_MODEL = 'nvdev/nvidia/nv-embedqa-e5-v5'
-    print("[config] INTERNAL_API detected.")
-    print(f"[config] Using internal embedding model: {EMBEDDINGS_MODEL}")
-
-else:
-    print("[config] No INTERNAL_API set.")
-    print(f"[config] Using public embedding model: {EMBEDDINGS_MODEL}")
 
 
 # Adding nltk data
@@ -124,7 +111,7 @@ def upload(urls: List[str]):
         vectorstore = Chroma.from_documents(
             documents=doc_splits,
             collection_name="rag-chroma",
-            embedding=NVIDIAEmbeddings(model=EMBEDDINGS_MODEL),
+            embedding=OllamaEmbeddings(model=EMBEDDINGS_MODEL),
             persist_directory="/project/data",
         )
         return vectorstore
@@ -183,7 +170,7 @@ def embed_documents(doc_splits: List[Any]):
         vectorstore = Chroma.from_documents(
             documents=doc_splits,
             collection_name="rag-chroma",
-            embedding=NVIDIAEmbeddings(model=EMBEDDINGS_MODEL),
+            embedding=OllamaEmbeddings(model=EMBEDDINGS_MODEL),
             persist_directory="/project/data",
         )
         return vectorstore
@@ -229,7 +216,7 @@ def _clear(
         # Clear the collection via Chroma client
         vectorstore = Chroma(
             collection_name=collection_name,
-            embedding_function=NVIDIAEmbeddings(model=EMBEDDINGS_MODEL),
+            embedding_function=OllamaEmbeddings(model=EMBEDDINGS_MODEL),
             persist_directory=persist_directory,
         )
         vectorstore._client.delete_collection(name=collection_name)
@@ -261,7 +248,7 @@ def _clear(
 #     """ This is a helper function for emptying the collection the vector store. """
 #     vectorstore = Chroma(
 #         collection_name="rag-chroma",
-#         embedding_function=NVIDIAEmbeddings(model=EMBEDDINGS_MODEL),
+#         embedding_function=OllamaEmbeddings(model=EMBEDDINGS_MODEL),
 #         persist_directory="/project/data",
 #     )
     
@@ -272,7 +259,7 @@ def get_retriever():
     """ This is a helper function for returning the retriever object of the vector store. """
     vectorstore = Chroma(
         collection_name="rag-chroma",
-        embedding_function=NVIDIAEmbeddings(model=EMBEDDINGS_MODEL),
+        embedding_function=OllamaEmbeddings(model=EMBEDDINGS_MODEL),
         persist_directory="/project/data",
     )
     retriever = vectorstore.as_retriever()
