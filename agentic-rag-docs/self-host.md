@@ -85,7 +85,7 @@ Do the following in the **remote** terminal. If you encounter any errors, use an
 ```bash
 # Exec into the container and pull a model
 
-docker exec ollama ollama pull llama2:7b
+docker exec ollama ollama pull llama3:8b-instruct
 
 # Verify the model has been pulled and is available
 
@@ -116,7 +116,7 @@ You will need the remote ip, ``<remote-ip>``, and the remote port, ``<remote-por
 
 curl -X POST http://<remote-ip>:<remote-port>/api/generate \
   -H "Content-Type: application/json" \
-  -d '{"model": "llama2:7b", "prompt": "Hello, Ollama!"}'
+  -d '{"model": "llama3:8b-instruct", "prompt": "Hello, Ollama!"}'
 ```
 
 
