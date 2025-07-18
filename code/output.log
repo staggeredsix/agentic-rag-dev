@@ -5,44 +5,7 @@ To create a public link, set `share=True` in `launch()`.
 IMPORTANT: You are using gradio version 4.15.0, however version 4.44.1 is available, please upgrade.
 --------
 ---ROUTE QUESTION---
-beef its whats for dinner
-error parsing router output: 'Input to PromptTemplate is missing variables {\'"datasource"\'}.  Expected: [\'"datasource"\', \'question\'] Received: [\'question\']\nNote: if you intended {"datasource"} to be part of the string and not a variable, please escape it with double curly braces like: \'{{"datasource"}}\'.\nFor troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/INVALID_PROMPT_INPUT '
-{'datasource': 'web_search'}
----ROUTE QUESTION TO WEB SEARCH---
----WEB SEARCH---
----GENERATE---
----CHECK HALLUCINATIONS---
-error parsing hallucination grader output: 'Input to PromptTemplate is missing variables {\'"score"\'}.  Expected: [\'"score"\', \'documents\', \'generation\'] Received: [\'documents\', \'generation\']\nNote: if you intended {"score"} to be part of the string and not a variable, please escape it with double curly braces like: \'{{"score"}}\'.\nFor troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/INVALID_PROMPT_INPUT '
----DECISION: GENERATION IS NOT GROUNDED IN DOCUMENTS, RE-TRY---
----GENERATE---
----CHECK HALLUCINATIONS---
-error parsing hallucination grader output: 'Input to PromptTemplate is missing variables {\'"score"\'}.  Expected: [\'"score"\', \'documents\', \'generation\'] Received: [\'documents\', \'generation\']\nNote: if you intended {"score"} to be part of the string and not a variable, please escape it with double curly braces like: \'{{"score"}}\'.\nFor troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/INVALID_PROMPT_INPUT '
----DECISION: GENERATION IS NOT GROUNDED IN DOCUMENTS, RE-TRY---
----GENERATE---
----CHECK HALLUCINATIONS---
-error parsing hallucination grader output: 'Input to PromptTemplate is missing variables {\'"score"\'}.  Expected: [\'"score"\', \'documents\', \'generation\'] Received: [\'documents\', \'generation\']\nNote: if you intended {"score"} to be part of the string and not a variable, please escape it with double curly braces like: \'{{"score"}}\'.\nFor troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/INVALID_PROMPT_INPUT '
----DECISION: GENERATION IS NOT GROUNDED IN DOCUMENTS, RE-TRY---
----GENERATE---
----CHECK HALLUCINATIONS---
-error parsing hallucination grader output: 'Input to PromptTemplate is missing variables {\'"score"\'}.  Expected: [\'"score"\', \'documents\', \'generation\'] Received: [\'documents\', \'generation\']\nNote: if you intended {"score"} to be part of the string and not a variable, please escape it with double curly braces like: \'{{"score"}}\'.\nFor troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/INVALID_PROMPT_INPUT '
----DECISION: GENERATION IS NOT GROUNDED IN DOCUMENTS, RE-TRY---
----GENERATE---
----CHECK HALLUCINATIONS---
-error parsing hallucination grader output: 'Input to PromptTemplate is missing variables {\'"score"\'}.  Expected: [\'"score"\', \'documents\', \'generation\'] Received: [\'documents\', \'generation\']\nNote: if you intended {"score"} to be part of the string and not a variable, please escape it with double curly braces like: \'{{"score"}}\'.\nFor troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/INVALID_PROMPT_INPUT '
----DECISION: GENERATION IS NOT GROUNDED IN DOCUMENTS, RE-TRY---
----GENERATE---
----CHECK HALLUCINATIONS---
-error parsing hallucination grader output: 'Input to PromptTemplate is missing variables {\'"score"\'}.  Expected: [\'"score"\', \'documents\', \'generation\'] Received: [\'documents\', \'generation\']\nNote: if you intended {"score"} to be part of the string and not a variable, please escape it with double curly braces like: \'{{"score"}}\'.\nFor troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/INVALID_PROMPT_INPUT '
----DECISION: GENERATION IS NOT GROUNDED IN DOCUMENTS, RE-TRY---
----GENERATE---
----CHECK HALLUCINATIONS---
-error parsing hallucination grader output: 'Input to PromptTemplate is missing variables {\'"score"\'}.  Expected: [\'"score"\', \'documents\', \'generation\'] Received: [\'documents\', \'generation\']\nNote: if you intended {"score"} to be part of the string and not a variable, please escape it with double curly braces like: \'{{"score"}}\'.\nFor troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/INVALID_PROMPT_INPUT '
----DECISION: GENERATION IS NOT GROUNDED IN DOCUMENTS, RE-TRY---
----GENERATE---
----CHECK HALLUCINATIONS---
-error parsing hallucination grader output: 'Input to PromptTemplate is missing variables {\'"score"\'}.  Expected: [\'"score"\', \'documents\', \'generation\'] Received: [\'documents\', \'generation\']\nNote: if you intended {"score"} to be part of the string and not a variable, please escape it with double curly braces like: \'{{"score"}}\'.\nFor troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/INVALID_PROMPT_INPUT '
----DECISION: GENERATION IS NOT GROUNDED IN DOCUMENTS, RE-TRY---
----GENERATE---
----CHECK HALLUCINATIONS---
-error parsing hallucination grader output: 'Input to PromptTemplate is missing variables {\'"score"\'}.  Expected: [\'"score"\', \'documents\', \'generation\'] Received: [\'documents\', \'generation\']\nNote: if you intended {"score"} to be part of the string and not a variable, please escape it with double curly braces like: \'{{"score"}}\'.\nFor troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/INVALID_PROMPT_INPUT '
----DECISION: GENERATION IS NOT GROUNDED IN DOCUMENTS, RE-TRY---
+test
+{'datasource': 'vectorstore'}
+---ROUTE QUESTION TO RAG---
+---RETRIEVE---
