@@ -183,10 +183,12 @@ def grade_documents(state):
 
     retrieval_grader = prompt | llm | JsonOutputParser()
     for d in documents:
-        score = retrieval_grader.invoke(
-            {"question": question, "document": d.page_content}
-        )
-        grade = score["score"]
+        try:
+            score = retrieval_grader.invoke({"question": question, "document": d.page_content})
+            grade = score["score"]
+        except Exception as exc:  # noqa: BLE001
+            print(f"error parsing retrieval grader output: {exc}")
+            grade = "no"
         # Document relevant
         if grade.lower() == "yes":
             print("---GRADE: DOCUMENT RELEVANT---")
@@ -271,7 +273,11 @@ def route_question(state):
                                temperature=0.7)
 
     question_router = prompt | llm | JsonOutputParser()
-    source = question_router.invoke({"question": question})
+    try:
+        source = question_router.invoke({"question": question})
+    except Exception as exc:  # noqa: BLE001
+        print(f"error parsing router output: {exc}")
+        source = {"datasource": "web_search"}
     print(source)
     if source["datasource"] == "web_search":
         print("---ROUTE QUESTION TO WEB SEARCH---")
@@ -343,10 +349,12 @@ def grade_generation_v_documents_and_question(state):
 
     hallucination_grader = prompt | llm | JsonOutputParser()
 
-    score = hallucination_grader.invoke(
-        {"documents": documents, "generation": generation}
-    )
-    grade = score["score"]
+    try:
+        score = hallucination_grader.invoke({"documents": documents, "generation": generation})
+        grade = score["score"]
+    except Exception as exc:  # noqa: BLE001
+        print(f"error parsing hallucination grader output: {exc}")
+        grade = "no"
 
     # Check hallucination
     prompt = PromptTemplate(
@@ -367,8 +375,12 @@ def grade_generation_v_documents_and_question(state):
         print("---DECISION: GENERATION IS GROUNDED IN DOCUMENTS---")
         # Check question-answering
         print("---GRADE GENERATION vs QUESTION---")
-        score = answer_grader.invoke({"question": question, "generation": generation})
-        grade = score["score"]
+        try:
+            score = answer_grader.invoke({"question": question, "generation": generation})
+            grade = score["score"]
+        except Exception as exc:  # noqa: BLE001
+            print(f"error parsing answer grader output: {exc}")
+            grade = "no"
         if grade == "yes":
             print("---DECISION: GENERATION ADDRESSES QUESTION---")
             return "useful"
