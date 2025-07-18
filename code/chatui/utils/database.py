@@ -20,8 +20,8 @@ from langchain_community.document_loaders import (
     TextLoader,
     CSVLoader 
 )
-from langchain_community.vectorstores import Chroma
-from langchain_community.embeddings import OllamaEmbeddings
+from langchain_chroma import Chroma
+from langchain_ollama import OllamaEmbeddings
 
 from typing import Any, Dict, List, Tuple, Union
 from urllib.parse import urlparse
