@@ -137,12 +137,14 @@ def generate(state):
         template=state["prompt_generator"],
         input_variables=["question", "document"],
     )
+
     llm = nim.CustomChatOpenAI(custom_endpoint=state["nim_generator_ip"],
                                port=state["nim_generator_port"] if len(state["nim_generator_port"]) > 0 else "11434",
                                model_name=state["nim_generator_id"] if len(state["nim_generator_id"]) > 0 else "llama2:7b",
                                gpu_type=state.get("nim_generator_gpu_type"),
                                gpu_count=state.get("nim_generator_gpu_count"),
                                temperature=0.7)
+
     rag_chain = prompt | llm | StrOutputParser()
     generation = rag_chain.invoke({"context": documents, "question": question})
     return {"documents": documents, "question": question, "generation": generation}
@@ -171,12 +173,14 @@ def grade_documents(state):
         template=state["prompt_retrieval"],
         input_variables=["question", "document"],
     )
+
     llm = nim.CustomChatOpenAI(custom_endpoint=state["nim_retrieval_ip"],
                                port=state["nim_retrieval_port"] if len(state["nim_retrieval_port"]) > 0 else "11434",
                                model_name=state["nim_retrieval_id"] if len(state["nim_retrieval_id"]) > 0 else "llama2:7b",
                                gpu_type=state.get("nim_retrieval_gpu_type"),
                                gpu_count=state.get("nim_retrieval_gpu_count"),
                                temperature=0.7)
+
     retrieval_grader = prompt | llm | JsonOutputParser()
     for d in documents:
         score = retrieval_grader.invoke(
@@ -258,12 +262,14 @@ def route_question(state):
         template=state["prompt_router"],
         input_variables=["question"],
     )
+
     llm = nim.CustomChatOpenAI(custom_endpoint=state["nim_router_ip"],
                                port=state["nim_router_port"] if len(state["nim_router_port"]) > 0 else "11434",
                                model_name=state["nim_router_id"] if len(state["nim_router_id"]) > 0 else "llama2:7b",
                                gpu_type=state.get("nim_router_gpu_type"),
                                gpu_count=state.get("nim_router_gpu_count"),
                                temperature=0.7)
+
     question_router = prompt | llm | JsonOutputParser()
     source = question_router.invoke({"question": question})
     print(source)
@@ -327,12 +333,14 @@ def grade_generation_v_documents_and_question(state):
         template=state["prompt_hallucination"],
         input_variables=["generation", "documents"],
     )
+
     llm = nim.CustomChatOpenAI(custom_endpoint=state["nim_hallucination_ip"],
                                port=state["nim_hallucination_port"] if len(state["nim_hallucination_port"]) > 0 else "11434",
                                model_name=state["nim_hallucination_id"] if len(state["nim_hallucination_id"]) > 0 else "llama2:7b",
                                gpu_type=state.get("nim_hallucination_gpu_type"),
                                gpu_count=state.get("nim_hallucination_gpu_count"),
                                temperature=0.7)
+
     hallucination_grader = prompt | llm | JsonOutputParser()
 
     score = hallucination_grader.invoke(
@@ -345,12 +353,14 @@ def grade_generation_v_documents_and_question(state):
         template=state["prompt_answer"],
         input_variables=["generation", "question"],
     )
+
     llm = nim.CustomChatOpenAI(custom_endpoint=state["nim_answer_ip"],
                                port=state["nim_answer_port"] if len(state["nim_answer_port"]) > 0 else "11434",
                                model_name=state["nim_answer_id"] if len(state["nim_answer_id"]) > 0 else "llama2:7b",
                                gpu_type=state.get("nim_answer_gpu_type"),
                                gpu_count=state.get("nim_answer_gpu_count"),
                                temperature=0.7)
+
     answer_grader = prompt | llm | JsonOutputParser()
     
     if grade == "yes":
