@@ -25,12 +25,12 @@ class CustomChatOpenAI(BaseChatModel):
 
     custom_endpoint: str = Field(None, description='Endpoint of remotely running NIM')
     port: Optional[str] = "11434"
-    model_name: Optional[str] = "llama2:7b"
+    model_name: Optional[str] = "llama3:8b-instruct"
     temperature: Optional[float] = 0.0
     gpu_type: Optional[str] = None
     gpu_count: Optional[str] = None
 
-    def __init__(self, custom_endpoint, port="11434", model_name="llama2:7b",
+    def __init__(self, custom_endpoint, port="11434", model_name="llama3:8b-instruct",
                  gpu_type=None, gpu_count=None, temperature=0.0, **kwargs):
         super().__init__(**kwargs)
         if gpu_type and gpu_count:
