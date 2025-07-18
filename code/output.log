@@ -6,6 +6,37 @@ IMPORTANT: You are using gradio version 4.15.0, however version 4.44.1 is availa
 --------
 ---ROUTE QUESTION---
 Farts
-{'datasource': 'vectorstore'}
----ROUTE QUESTION TO RAG---
----RETRIEVE---
+{'datasource': 'web_search'}
+---ROUTE QUESTION TO WEB SEARCH---
+---WEB SEARCH---
+---GENERATE---
+---CHECK HALLUCINATIONS---
+---DECISION: GENERATION IS GROUNDED IN DOCUMENTS---
+---GRADE GENERATION vs QUESTION---
+---DECISION: GENERATION ADDRESSES QUESTION---
+---ROUTE QUESTION---
+What are the latest news stories for the day?
+{'datasource': 'web_search'}
+---ROUTE QUESTION TO WEB SEARCH---
+---WEB SEARCH---
+---GENERATE---
+---CHECK HALLUCINATIONS---
+error parsing hallucination grader output: Invalid json output: Score: Binary 'yes'
+For troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/OUTPUT_PARSING_FAILURE 
+---DECISION: GENERATION IS NOT GROUNDED IN DOCUMENTS, RE-TRY---
+---GENERATE---
+---CHECK HALLUCINATIONS---
+error parsing hallucination grader output: Invalid json output: Yes
+For troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/OUTPUT_PARSING_FAILURE 
+---DECISION: GENERATION IS NOT GROUNDED IN DOCUMENTS, RE-TRY---
+---GENERATE---
+---CHECK HALLUCINATIONS---
+error parsing hallucination grader output: Invalid json output: Score: Yes
+For troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/OUTPUT_PARSING_FAILURE 
+---DECISION: GENERATION IS NOT GROUNDED IN DOCUMENTS, RE-TRY---
+---GENERATE---
+---CHECK HALLUCINATIONS---
+error parsing hallucination grader output: Invalid json output: Score: Yes
+For troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/OUTPUT_PARSING_FAILURE 
+---DECISION: GENERATION IS NOT GROUNDED IN DOCUMENTS, RE-TRY---
+---GENERATE---
