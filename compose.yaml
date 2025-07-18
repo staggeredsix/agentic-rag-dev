@@ -21,6 +21,11 @@ services:
     command: ["milvus", "run", "standalone"]
     runtime: nvidia
     platform: linux/arm64
+    environment:
+      # Use an external etcd instance by providing its endpoint. Do not use
+      # localhost here because it resolves inside the container.  If this
+      # variable is empty, Milvus defaults to its embedded etcd.
+      ETCD_ENDPOINTS: ${ETCD_ENDPOINTS:-}
     ports:
       - "19530:19530"
       - "9091:9091"
