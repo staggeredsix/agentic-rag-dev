@@ -100,6 +100,7 @@ Use these details if you want to modify the application, e.g. by configuring pro
 3. Start the Milvus container from `compose.yaml` using Docker Compose.
    - The compose file configures Milvus to run in standalone mode with GPU support.
    - The `milvus` service is multi-arch and works on arm64 systems including NVIDIA Blackwell.
+   - If you run Milvus with an **external etcd** instance, set the `ETCD_ENDPOINTS` environment variable to the host's IP address. Using `localhost` will fail inside the container.
 4. Configure the chat app to use the self-hosted endpoint.
 
 
