@@ -1,6 +1,6 @@
 FROM milvusdb/milvus:v2.5.8 as milvus
 FROM quay.io/coreos/etcd:v3.5.18 as etcd
-FROM minio/minio:RELEASE.2023-03-20T20-16-18Z as minio
+FROM minio/minio:RELEASE.2025-07-18T21-56-31Z as minio
 
 FROM ubuntu:22.04
 
