@@ -16,16 +16,27 @@ services:
     volumes:
       - ollama_data:/root/.ollama
     restart: unless-stopped
+  etcd:
+    image: bitnami/etcd:3.5
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
+      - ETCD_ADVERTISE_CLIENT_URLS=http://0.0.0.0:2379
+      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+    ports:
+      - "2379:2379"
+    volumes:
+      - etcd_data:/etcd
+    restart: unless-stopped
   milvus:
     image: milvusdb/milvus:latest
     command: ["milvus", "run", "standalone"]
     runtime: nvidia
     platform: linux/arm64
     environment:
-      # Use an external etcd instance by providing its endpoint. Do not use
-      # localhost here because it resolves inside the container.  If this
-      # variable is empty, Milvus defaults to its embedded etcd.
-      ETCD_ENDPOINTS: ${ETCD_ENDPOINTS:-}
+      # Milvus connects to the internal etcd service by default.
+      # Override ETCD_ENDPOINTS if you want to use a different instance.
+      ETCD_ENDPOINTS: ${ETCD_ENDPOINTS:-http://etcd:2379}
+
     ports:
       - "19530:19530"
       - "9091:9091"
@@ -40,3 +51,4 @@ networks:
 volumes:
   ollama_data:
   milvus_data:
+  etcd_data:
