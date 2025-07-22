@@ -8,5 +8,6 @@ When using the self-hosted Milvus container you may encounter startup or connect
 | **Services starting too quickly** | Increase retry and backoff values in the Milvus configuration files (for example `rootCoord.grpcConnectionPool.rcpInitMaxRetry` and the `backoff` options). This allows components more time to find dependencies. |
 | **etcd out of sync** | Verify etcd health with `etcdctl endpoint health` and inspect the etcd logs. All endpoints must report `healthy`. |
 | **Configuration mismatch** | Double-check that every component references the same etcd endpoints and RootCoord settings. In `compose.yaml` these are set with the `ETCD_ENDPOINTS` environment variable. |
+| **QueryCoord or DataCoord unavailable** | Warnings like `find no available querycoord` or `find no available datacoord` indicate a component failed to start. Inspect the Milvus logs for errors and restart the container so all services come up cleanly. |
 
 Start by confirming all services are running with `docker ps` and inspect individual logs with `docker logs <service>`. After applying the changes, restart the stack using `docker compose up -d`.
