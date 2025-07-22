@@ -2,6 +2,9 @@ services:
   ollama:
     image: ollama/ollama:latest
     runtime: nvidia
+    command: bash -c "ollama pull ${OLLAMA_MODEL:-llama3:8b-instruct} && ollama serve"
+    environment:
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-llama3:8b-instruct}
     deploy:
       resources:
         reservations:
