@@ -52,7 +52,7 @@ This guide focuses on running a lightweight Ollama container.
 
 ### Three Basic Steps
 - **Deploy Ollama Container**: Pull the Ollama container onto the remote and run it
-- **Pull Model into Ollama Container**: Exec into the container and load the desired model
+- **Model Pulled Automatically**: The container uses the `OLLAMA_MODEL` environment variable to download a model at startup
 - **Add Ollama Container as an Endpoint**: Configure the Agentic RAG app to use the model
 
 ## Deploy Ollama Container
@@ -70,6 +70,7 @@ docker run -d --name ollama \
   --gpus all --restart unless-stopped \
   -p <remote-port>:11434 \
   -v ollama_data:/root/.ollama \
+  -e OLLAMA_MODEL=llama3:8b-instruct \
   ollama/ollama:latest
 
 # Make sure it is running properly
@@ -78,30 +79,11 @@ curl http://localhost:10000/api/tags
 
 ```
 
-## Pull Model into Ollama Container
-
-Do the following in the **remote** terminal. If you encounter any errors, use an LLM to help you debug. 
+The container automatically pulls the model specified by the `OLLAMA_MODEL` environment variable when it starts.
+Verify the model has been pulled and is available:
 
 ```bash
-# Exec into the container and pull a model
-
-docker exec ollama ollama pull llama3:8b-instruct
-
-# Verify the model has been pulled and is available
-
 curl http://localhost:<remote-port>/api/tags
-
-# Submit a simple query to the model to test
-
-curl -X POST http://localhost:<remote-port>/api/generate \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "llama3",
-    "prompt": "What is the meaning of life?",
-    "stream": false
-  }'
-
-
 ```
 
 ## Add Ollama Container as an Endpoint

@@ -97,6 +97,7 @@ Use these details if you want to modify the application, e.g. by configuring pro
 
 1. Set up a Linux box with an NVIDIA GPU and Docker.
 2. Deploy an Ollama container or an NVIDIA NIM on that host.
+   - The compose file automatically pulls the model specified by `OLLAMA_MODEL` in `variables.env` when the Ollama container starts. Change this value to use a different LLM.
 3. Start the Milvus container from `compose.yaml` using Docker Compose, or build a monolithic image from `docker/milvus`.
    - Build the single-container image with `docker build -t agentic-milvus docker/milvus`.
    - Run it with `docker run -p 19530:19530 -p 9091:9091 -p 9000:9000 -p 2379:2379 agentic-milvus`.
