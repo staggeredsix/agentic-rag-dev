@@ -98,6 +98,8 @@ Use these details if you want to modify the application, e.g. by configuring pro
 1. Set up a Linux box with an NVIDIA GPU and Docker.
 2. Deploy an Ollama container or an NVIDIA NIM on that host.
 3. Start the Milvus container from `compose.yaml` using Docker Compose, or build a monolithic image from `docker/milvus`.
+   - Build the single-container image with `docker build -t agentic-milvus docker/milvus`.
+   - Run it with `docker run -p 19530:19530 -p 9091:9091 -p 9000:9000 -p 2379:2379 agentic-milvus`.
    - The compose file configures Milvus to run in standalone mode with GPU support.
    - The `milvus` service is multi-arch and works on arm64 systems including NVIDIA Blackwell.
 

@@ -6,7 +6,7 @@ FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get install -y supervisor curl && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y curl netcat && rm -rf /var/lib/apt/lists/*
 
 # copy binaries from stage images
 COPY --from=milvus / /milvus-base
@@ -21,11 +21,11 @@ RUN mkdir -p /var/lib/milvus /var/lib/etcd /data/minio
 # link milvus install
 RUN ln -s /milvus-base/opt/milvus /opt/milvus
 
-COPY init.sh /init.sh
-COPY supervisord.conf /etc/supervisor/conf.d/milvus.conf
-RUN chmod +x /init.sh
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+COPY minio.env /etc/minio.env
+RUN chmod +x /docker-entrypoint.sh
 
-EXPOSE 19530 19531 9091 9000 9001
+EXPOSE 19530 19531 9091 9000 9001 2379
 HEALTHCHECK --interval=30s --start-period=60s --timeout=5s CMD curl -f http://localhost:9091/healthz || exit 1
 
-CMD ["/init.sh"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
