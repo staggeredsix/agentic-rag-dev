@@ -36,6 +36,7 @@ services:
       # Milvus connects to the internal etcd service by default.
       # Override ETCD_ENDPOINTS if you want to use a different instance.
       ETCD_ENDPOINTS: ${ETCD_ENDPOINTS:-http://etcd:2379}
+
     ports:
       - "19530:19530"
       - "9091:9091"
