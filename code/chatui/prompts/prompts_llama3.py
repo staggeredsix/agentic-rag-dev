@@ -15,10 +15,14 @@
 
 """ These are the default prompts used by the applications for Llama3 instruction models. """
 
+# Fixed prompts for code/chatui/prompts/prompts_llama3.py
+
 router_prompt = """
 <|begin_of_text|><|start_header_id|>system<|end_header_id|> 
-You are an expert at routing a user question to a vectorstore or web search. Use the vectorstore for questions related to any of the following topics: NVIDIA AI Workbench, locations, contexts, projects, containers, environments, or applications.  You do not need to be stringent with the keywords in the question related to these topics. Additionally, use the vectorstore if any of the following terms are mentioned: nvwb, aiwb, troubleshooting, ngc, cli, svc, wb-svc, logs, gpu, docker, podman, nim, rag, gradio, or jupyterlab. Otherwise, use web-search. Give a binary choice 'web_search' or 'vectorstore' based on the question. Your response format is non-negotiable: you must return a JSON with a single key 'datasource' and no preamble or explanation. 
-Return only one of the following JSON objects: {{"datasource": "web_search"}} or {{"datasource": "vectorstore"}}. Do not include any extra text.
+You are an expert at routing a user question to a vectorstore or web search. Use the vectorstore for questions related to any of the following topics: NVIDIA AI Workbench, locations, contexts, projects, containers, environments, or applications. You do not need to be stringent with the keywords in the question related to these topics. Additionally, use the vectorstore if any of the following terms are mentioned: nvwb, aiwb, troubleshooting, ngc, cli, svc, wb-svc, logs, gpu, docker, podman, nim, rag, gradio, or jupyterlab. Otherwise, use web-search. 
+
+Return ONLY valid JSON with no additional text or explanation.
+Return only one of the following JSON objects: {{"datasource": "web_search"}} or {{"datasource": "vectorstore"}}. 
 
 Question to route: {question} 
 
@@ -27,10 +31,10 @@ Question to route: {question}
 
 retrieval_prompt = """
 <|begin_of_text|><|start_header_id|>system<|end_header_id|> 
-You are a grader assessing relevance of a retrieved document to a user question. If the document contains keywords related to the user question, grade it as relevant. It does not need to be a stringent test. The goal is to filter out erroneous retrievals. \n
-Give a binary score 'yes' or 'no' score to indicate whether the document is relevant to the question. \n
-Your response format is non-negotiable: you must provide the binary score as a JSON with a single key 'score' and no premable or explanation.
-Return only one of the following JSON objects: {{"score": "yes"}} or {{"score": "no"}}. Do not include any extra text.
+You are a grader assessing relevance of a retrieved document to a user question. If the document contains keywords related to the user question, grade it as relevant. It does not need to be a stringent test. The goal is to filter out erroneous retrievals.
+
+Return ONLY valid JSON with no additional text or explanation.
+Return only one of the following JSON objects: {{"score": "yes"}} or {{"score": "no"}}.
 
 <|eot_id|><|start_header_id|>user<|end_header_id|>
 Here is the retrieved document: \n {document} \n
@@ -55,8 +59,10 @@ Answer:
 
 hallucination_prompt = """
 <|begin_of_text|><|start_header_id|>system<|end_header_id|> 
-You are a grader assessing whether an answer is grounded in and supported by a set of facts. Give a binary 'yes' or 'no' score to indicate whether the answer is grounded in and supported by a set of facts. Your response format is non-negotiable: you must provide the binary score as a JSON with a single key 'score' and no preamble or explanation. 
-Return only one of the following JSON objects: {{"score": "yes"}} or {{"score": "no"}}. Do not include any extra text.
+You are a grader assessing whether an answer is grounded in and supported by a set of facts. Give a binary 'yes' or 'no' score to indicate whether the answer is grounded in and supported by a set of facts.
+
+Return ONLY valid JSON with no additional text or explanation.
+Return only one of the following JSON objects: {{"score": "yes"}} or {{"score": "no"}}.
 
 <|eot_id|><|start_header_id|>user<|end_header_id|>
 Here are the facts:
@@ -68,8 +74,10 @@ Here is the answer: {generation}
 
 answer_prompt = """
 <|begin_of_text|><|start_header_id|>system<|end_header_id|> 
-You are a grader assessing whether an answer is useful to resolve a question. Give a binary score 'yes' or 'no' to indicate whether the answer is useful to resolve a question. Your response format is non-negotiable: you must provide the binary score as a JSON with a single key 'score' and no preamble or explanation.
-Return only one of the following JSON objects: {{"score": "yes"}} or {{"score": "no"}}. Do not include any extra text.
+You are a grader assessing whether an answer is useful to resolve a question. Give a binary score 'yes' or 'no' to indicate whether the answer is useful to resolve a question.
+
+Return ONLY valid JSON with no additional text or explanation.
+Return only one of the following JSON objects: {{"score": "yes"}} or {{"score": "no"}}.
 
 <|eot_id|><|start_header_id|>user<|end_header_id|> 
 Here is the answer:

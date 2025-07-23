@@ -14,6 +14,8 @@
 # limitations under the License.
 
 import os
+import json
+import re
 
 from typing_extensions import TypedDict
 from typing import List, Optional
@@ -33,6 +35,54 @@ class TavilyAPIError(Exception):
     """Raised when Tavily returns invalid or unauthorized results."""
     pass
 
+
+def extract_json_from_text(text: str, expected_key: str) -> dict:
+    """
+    Extract JSON from text that may contain additional content or be incomplete.
+    
+    Args:
+        text: The raw text output from the model
+        expected_key: Either "datasource" for router or "score" for graders
+    
+    Returns:
+        dict: Valid JSON object
+    """
+    # Clean the text
+    text = text.strip()
+    
+    # Try to parse the text directly first
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        pass
+    
+    # Handle incomplete JSON - try to reconstruct it
+    if expected_key == "datasource":
+        # Look for datasource values
+        if "web_search" in text.lower():
+            return {"datasource": "web_search"}
+        elif "vectorstore" in text.lower():
+            return {"datasource": "vectorstore"}
+        # Try to extract from partial JSON
+        if '"vectorstore"' in text or 'vectorstore' in text:
+            return {"datasource": "vectorstore"}
+        else:
+            return {"datasource": "web_search"}  # Default fallback
+            
+    elif expected_key == "score":
+        # Look for score values
+        if "yes" in text.lower():
+            return {"score": "yes"}
+        elif "no" in text.lower():
+            return {"score": "no"}
+        else:
+            return {"score": "no"}  # Default fallback for safety
+    
+    # Final fallback
+    if expected_key == "datasource":
+        return {"datasource": "web_search"}
+    else:
+        return {"score": "no"}
 
 
 ### State
@@ -179,14 +229,16 @@ def grade_documents(state):
                                model_name=state["nim_retrieval_id"] if len(state["nim_retrieval_id"]) > 0 else "llama3:8b-instruct",
                                gpu_type=state.get("nim_retrieval_gpu_type"),
                                gpu_count=state.get("nim_retrieval_gpu_count"),
-                               temperature=0.7)
+                               temperature=0.0)
 
-    retrieval_grader = prompt | llm | JsonOutputParser()
+    retrieval_grader = prompt | llm | StrOutputParser()
     for d in documents:
         try:
-            score = retrieval_grader.invoke({"question": question, "document": d.page_content})
+            raw_output = retrieval_grader.invoke({"question": question, "document": d.page_content})
+            print(f"Raw retrieval output: {repr(raw_output)}")  # Debug output
+            score = extract_json_from_text(raw_output, "score")
             grade = score["score"]
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             print(f"error parsing retrieval grader output: {exc}")
             grade = "no"
         # Document relevant
@@ -236,11 +288,6 @@ def web_search(state):
 
     except Exception as e:
         raise TavilyAPIError(f"Tavily web search failed: {e}")
-    # if documents is not None:
-    #     documents.append(web_results)
-    # else:
-    #     documents = [web_results]
-
 
 
 ### Conditional edge
@@ -270,12 +317,14 @@ def route_question(state):
                                model_name=state["nim_router_id"] if len(state["nim_router_id"]) > 0 else "llama3:8b-instruct",
                                gpu_type=state.get("nim_router_gpu_type"),
                                gpu_count=state.get("nim_router_gpu_count"),
-                               temperature=0.7)
+                               temperature=0.0)
 
-    question_router = prompt | llm | JsonOutputParser()
+    question_router = prompt | llm | StrOutputParser()
     try:
-        source = question_router.invoke({"question": question})
-    except Exception as exc:  # noqa: BLE001
+        raw_output = question_router.invoke({"question": question})
+        print(f"Raw router output: {repr(raw_output)}")  # Debug output
+        source = extract_json_from_text(raw_output, "datasource")
+    except Exception as exc:
         print(f"error parsing router output: {exc}")
         source = {"datasource": "web_search"}
     print(source)
@@ -345,14 +394,16 @@ def grade_generation_v_documents_and_question(state):
                                model_name=state["nim_hallucination_id"] if len(state["nim_hallucination_id"]) > 0 else "llama3:8b-instruct",
                                gpu_type=state.get("nim_hallucination_gpu_type"),
                                gpu_count=state.get("nim_hallucination_gpu_count"),
-                               temperature=0.7)
+                               temperature=0.0)
 
-    hallucination_grader = prompt | llm | JsonOutputParser()
+    hallucination_grader = prompt | llm | StrOutputParser()
 
     try:
-        score = hallucination_grader.invoke({"documents": documents, "generation": generation})
+        raw_output = hallucination_grader.invoke({"documents": documents, "generation": generation})
+        print(f"Raw hallucination output: {repr(raw_output)}")  # Debug output
+        score = extract_json_from_text(raw_output, "score")
         grade = score["score"]
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         print(f"error parsing hallucination grader output: {exc}")
         grade = "no"
 
@@ -367,18 +418,20 @@ def grade_generation_v_documents_and_question(state):
                                model_name=state["nim_answer_id"] if len(state["nim_answer_id"]) > 0 else "llama3:8b-instruct",
                                gpu_type=state.get("nim_answer_gpu_type"),
                                gpu_count=state.get("nim_answer_gpu_count"),
-                               temperature=0.7)
+                               temperature=0.0)
 
-    answer_grader = prompt | llm | JsonOutputParser()
+    answer_grader = prompt | llm | StrOutputParser()
     
     if grade == "yes":
         print("---DECISION: GENERATION IS GROUNDED IN DOCUMENTS---")
         # Check question-answering
         print("---GRADE GENERATION vs QUESTION---")
         try:
-            score = answer_grader.invoke({"question": question, "generation": generation})
+            raw_output = answer_grader.invoke({"question": question, "generation": generation})
+            print(f"Raw answer output: {repr(raw_output)}")  # Debug output
+            score = extract_json_from_text(raw_output, "score")
             grade = score["score"]
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             print(f"error parsing answer grader output: {exc}")
             grade = "no"
         if grade == "yes":
