@@ -7,7 +7,14 @@ services:
       - |
         ollama serve &
         sleep 5
+        # Pull the default models needed for the agentic RAG system
+        echo "Pulling phi4-reasoning:14b for router, retrieval, and generator..."
+        ollama pull phi4-reasoning:14b
+        echo "Pulling llama3-chatqa:8b for hallucination and answer grading..."
+        ollama pull llama3-chatqa:8b
+        echo "Pulling default embedding model..."
         ollama pull ${OLLAMA_MODEL:-llama3:8b-instruct}
+        echo "All models pulled successfully!"
         wait
     environment:
       - OLLAMA_MODEL=${OLLAMA_MODEL:-llama3:8b-instruct}
@@ -28,7 +35,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-      start_period: 60s
+      start_period: 120s  # Increased to allow time for model downloads
 
   etcd:
     image: bitnami/etcd:3.5
@@ -63,7 +70,6 @@ services:
   milvus:
     image: milvusdb/milvus:latest
     command: ["milvus", "run", "standalone"]
-    # Remove conflicting runtime and platform specs
     environment:
       ETCD_ENDPOINTS: etcd:2379
       MINIO_ADDRESS: minio:9000
