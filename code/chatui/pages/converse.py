@@ -49,9 +49,9 @@ RECURSION_LIMIT = int(os.getenv("RECURSION_LIMIT", DEFAULT_RECURSION_LIMIT))
 
 
 # Default model configurations for self-hosted only setup
-DEFAULT_ROUTER_MODEL = 'phi4-reasoning:14b'
-DEFAULT_RETRIEVAL_MODEL = 'phi4-reasoning:14b'  
-DEFAULT_GENERATOR_MODEL = 'phi4-reasoning:14b'
+DEFAULT_ROUTER_MODEL = 'llama3-chatqa:8b'
+DEFAULT_RETRIEVAL_MODEL = 'llama3-chatqa:8b'  
+DEFAULT_GENERATOR_MODEL = 'llama3-chatqa:8b'
 DEFAULT_HALLUCINATION_MODEL = 'llama3-chatqa:8b'
 DEFAULT_ANSWER_MODEL = 'llama3-chatqa:8b'
 
