@@ -36,13 +36,13 @@ EMBEDDINGS_MODEL = 'llama3:8b-instruct'
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://ollama:11434")
 
 # Milvus connection configuration
-MILVUS_HOST = os.getenv("MILVUS_HOST", "milvus")  # Use service name from compose.yaml
+MILVUS_HOST = os.getenv("MILVUS_HOST", "localhost")  # Use service name from compose.yaml
 MILVUS_PORT = os.getenv("MILVUS_PORT", "19530")
 
 # Custom Milvus connection args
 CUSTOM_MILVUS_CONNECTION = {
     "host": MILVUS_HOST,
-    "port": MILVUS_PORT,
+    "port": int(MILVUS_PORT),
 }
 
 # Set the chunk size and overlap for the text splitter. Uses defaults but allows them to be set as environment variables.
