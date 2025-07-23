@@ -118,7 +118,7 @@ def upload(urls: List[str]):
         vectorstore = Milvus.from_documents(
             documents=doc_splits,
             embedding=OllamaEmbeddings(model=EMBEDDINGS_MODEL, base_url=OLLAMA_BASE_URL),
-            collection_name="rag-milvus",
+            collection_name="rag_milvus",
             connection_args=CUSTOM_MILVUS_CONNECTION,
             drop_old=True,
         )
@@ -178,7 +178,7 @@ def embed_documents(doc_splits: List[Any]):
         vectorstore = Milvus.from_documents(
             doc_splits,
             OllamaEmbeddings(model=EMBEDDINGS_MODEL, base_url=OLLAMA_BASE_URL),
-            collection_name="rag-milvus",
+            collection_name="rag_milvus",
             connection_args=CUSTOM_MILVUS_CONNECTION,
             drop_old=True,
         )
@@ -216,7 +216,7 @@ def upload_files(file_paths: List[str]):
 
 
 def _clear(
-    collection_name: str = "rag-milvus",
+    collection_name: str = "rag_milvus",
 ):
     """Clear the Milvus collection by dropping and recreating it."""
     try:
@@ -235,7 +235,7 @@ def get_retriever():
     """Return the retriever object of the Milvus vector store."""
     vectorstore = Milvus(
         embedding_function=OllamaEmbeddings(model=EMBEDDINGS_MODEL, base_url=OLLAMA_BASE_URL),
-        collection_name="rag-milvus",
+        collection_name="rag_milvus",
         connection_args=CUSTOM_MILVUS_CONNECTION,
     )
     retriever = vectorstore.as_retriever()
