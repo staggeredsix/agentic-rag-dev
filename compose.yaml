@@ -8,12 +8,7 @@ services:
         ollama serve &
         sleep 5
         # Pull the default models needed for the agentic RAG system
-        echo "Pulling phi4-reasoning:14b for router, retrieval, and generator..."
-        ollama pull phi4-reasoning:14b
-        echo "Pulling llama3-chatqa:8b for hallucination and answer grading..."
-        ollama pull llama3-chatqa:8b
-        echo "Pulling default embedding model..."
-        ollama pull ${OLLAMA_MODEL:-llama3:8b-instruct}
+        echo "Pulling llama3-chatqa:8b"
         echo "All models pulled successfully!"
         wait
     environment:
