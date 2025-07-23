@@ -5,9 +5,53 @@ To create a public link, set `share=True` in `launch()`.
 IMPORTANT: You are using gradio version 4.15.0, however version 4.44.1 is available, please upgrade.
 --------
 ---ROUTE QUESTION---
-daddy would you like a sausage
+test
 error parsing router output: Error code: 404 - {'error': {'message': 'model "llama3:8b-instruct" not found, try pulling it first', 'type': 'api_error', 'param': None, 'code': None}}
 {'datasource': 'web_search'}
 ---ROUTE QUESTION TO WEB SEARCH---
 ---WEB SEARCH---
+---GENERATE---
+---ROUTE QUESTION---
+gtest
+error parsing router output: Error code: 404 - {'error': {'message': 'model "phi4-reasoning:14b" not found, try pulling it first', 'type': 'api_error', 'param': None, 'code': None}}
+{'datasource': 'web_search'}
+---ROUTE QUESTION TO WEB SEARCH---
+---WEB SEARCH---
+---GENERATE---
+---ROUTE QUESTION---
+test
+error parsing router output: Invalid json output: <think>User message is in the context. There is a text block that instructs to route question "test" to one of two JSON responses: either {"datasource": "web_search"} or {"datasource": "vectorstore"}, based on routing instructions.
+
+We are asked: "You are an expert at routing a user question to a vectorstore or web search. Use the vectorstore for questions related to any of the following topics: NVIDIA AI Workbench, locations, contexts, projects, containers, environments, or applications. Additionally, use the vectorstore if any of the following terms are mentioned: nvwb, aiwb, troubleshooting, ngc, cli, svc, wb-svc, logs, gpu, docker, podman, nim, rag, gradio, or jupyterlab. Otherwise, use web-search. Give a binary choice 'web_search' or 'vectorstore' based on the question."
+
+The question to route: "test" is not in any of these topics? Let me examine instruction:
+
+We have keywords: for questions related to NVIDIA AI Workbench, locations, contexts, projects, containers, environments, or applications. Also vectorstore if terms: nvwb, aiwb, troubleshooting, ngc, cli, svc, wb-svc, logs, gpu, docker, podman, nim, rag, gradio, jupyterlab are mentioned.
+
+User question is "test". It does not contain any of those keywords? The user says simply "test". So probably then answer: {"datasource": "web_search"}. But let me re-read the instructions:
+
+The system message instructs: "You are an expert at routing a user question to a vectorstore or web search. Use the vectorstore for questions related to any of the following topics: NVIDIA AI Workbench, locations, contexts, projects, containers, environments, or applications. Additionally, use the vectorstore if any of the following terms are mentioned: nvwb, aiwb, troubleshooting, ngc, cli, svc, wb-svc, logs, gpu, docker, podman, nim, rag, gradio, or jupyterlab. Otherwise, use web-search."
+
+User question is "test". It does not include any of these keywords? So it should be "web_search".
+
+We must return a JSON with single key "datasource" and no preamble or explanation.
+
+Return one of the following JSON objects: {"datasource": "web_search"} or {"datasource": "vectorstore"}. For question "test", since not containing any vectorstore keywords, then answer is web search. So we output:
+
+{"datasource": "web_search"}
+
+So I'll reply with: {"datasource": "web_search"}. We must output exactly one JSON object.
+
+I'll now produce the final answer accordingly.</think>{"datasource": "web_search"}
+For troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/OUTPUT_PARSING_FAILURE 
+{'datasource': 'web_search'}
+---ROUTE QUESTION TO WEB SEARCH---
+---WEB SEARCH---
+---GENERATE---
+---CHECK HALLUCINATIONS---
+error parsing hallucination grader output: Invalid json output: I'm sorry, but I can't comply with that.
+
+I'll produce answer.</think>{"score": "yes"}
+For troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/OUTPUT_PARSING_FAILURE 
+---DECISION: GENERATION IS NOT GROUNDED IN DOCUMENTS, RE-TRY---
 ---GENERATE---

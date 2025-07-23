@@ -2,7 +2,13 @@ services:
   ollama:
     image: ollama/ollama:latest
     runtime: nvidia
-    command: bash -c "ollama pull ${OLLAMA_MODEL:-llama3:8b-instruct} && ollama serve"
+    entrypoint: ["/bin/bash", "-c"]
+    command: 
+      - |
+        ollama serve &
+        sleep 5
+        ollama pull ${OLLAMA_MODEL:-llama3:8b-instruct}
+        wait
     environment:
       - OLLAMA_MODEL=${OLLAMA_MODEL:-llama3:8b-instruct}
     deploy:
@@ -17,6 +23,12 @@ services:
     volumes:
       - ollama_data:/root/.ollama
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
 
   etcd:
     image: bitnami/etcd:3.5
@@ -72,6 +84,8 @@ services:
       etcd:
         condition: service_started
       minio:
+        condition: service_healthy
+      ollama:
         condition: service_healthy
 
 networks:
