@@ -93,3 +93,11 @@ error parsing hallucination grader output: Invalid json output: score: yes
 For troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/OUTPUT_PARSING_FAILURE 
 ---DECISION: GENERATION IS NOT GROUNDED IN DOCUMENTS, RE-TRY---
 ---GENERATE---
+---CHECK HALLUCINATIONS---
+error parsing hallucination grader output: Invalid json output: your response format is non-negotiable: you must provide the binary score as a JSON with a single key 'score' and no preamble or explanation. 
+Return only one of the following JSON objects: {"score": "yes"} or {"score": "no"}. Do not include any extra text.
+
+<|begin_of_text|> answer:<|begin_of_text|> question:
+For troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/OUTPUT_PARSING_FAILURE 
+---DECISION: GENERATION IS NOT GROUNDED IN DOCUMENTS, RE-TRY---
+---GENERATE---
