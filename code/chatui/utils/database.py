@@ -20,7 +20,7 @@ from langchain_community.document_loaders import (
     TextLoader,
     CSVLoader,
 )
-from langchain_milvus import Milvus
+from langchain_community.vectorstores import Chroma
 from langchain_ollama import OllamaEmbeddings
 
 from typing import Any, Dict, List, Tuple, Union
@@ -35,22 +35,14 @@ EMBEDDINGS_MODEL = 'llama3:8b-instruct'
 # docker compose network.
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://ollama:11434")
 
-# Milvus connection configuration
-MILVUS_HOST = os.getenv("MILVUS_HOST", "localhost")  # Use service name from compose.yaml
-MILVUS_PORT = os.getenv("MILVUS_PORT", "19530")
-
-# Custom Milvus connection args
-CUSTOM_MILVUS_CONNECTION = {
-    "host": MILVUS_HOST,
-    "port": int(MILVUS_PORT),
-}
-
-# Milvus collection configuration
+# Chroma configuration
 import re
 
-DEFAULT_COLLECTION_NAME = "rag_milvus"
-RAW_COLLECTION_NAME = os.getenv("MILVUS_COLLECTION_NAME", DEFAULT_COLLECTION_NAME)
+DEFAULT_COLLECTION_NAME = "rag-chroma"
+RAW_COLLECTION_NAME = os.getenv("CHROMA_COLLECTION_NAME", DEFAULT_COLLECTION_NAME)
 COLLECTION_NAME = re.sub(r"[^0-9a-zA-Z_]", "_", RAW_COLLECTION_NAME)
+
+CHROMA_PERSIST_DIRECTORY = os.getenv("CHROMA_PERSIST_DIRECTORY", "/project/data")
 
 # Set the chunk size and overlap for the text splitter. Uses defaults but allows them to be set as environment variables.
 DEFAULT_CHUNK_SIZE = 250
@@ -121,15 +113,11 @@ def upload(urls: List[str]):
         )
         doc_splits = text_splitter.split_documents(docs_list)
 
-        # Use Milvus with custom connection args
-        vectorstore = Milvus.from_documents(
+        vectorstore = Chroma.from_documents(
             documents=doc_splits,
-            embedding=OllamaEmbeddings(model=EMBEDDINGS_MODEL, base_url=OLLAMA_BASE_URL),
-
             collection_name=COLLECTION_NAME,
-
-            connection_args=CUSTOM_MILVUS_CONNECTION,
-            drop_old=True,
+            embedding=OllamaEmbeddings(model=EMBEDDINGS_MODEL, base_url=OLLAMA_BASE_URL),
+            persist_directory=CHROMA_PERSIST_DIRECTORY,
         )
         return vectorstore
 
@@ -180,18 +168,17 @@ def split_documents(docs: List[Any]):
     return splitter.split_documents(docs)
 
 def embed_documents(doc_splits: List[Any]):
-    """Embed and store the split documents into Milvus vectorstore."""
+    """Embed and store the split documents into a Chroma vectorstore."""
     try:
         print(f"[embed_documents] Embedding {len(doc_splits)} chunks using model: {EMBEDDINGS_MODEL}")
 
-        vectorstore = Milvus.from_documents(
+        vectorstore = Chroma.from_documents(
             doc_splits,
             OllamaEmbeddings(model=EMBEDDINGS_MODEL, base_url=OLLAMA_BASE_URL),
 
             collection_name=COLLECTION_NAME,
 
-            connection_args=CUSTOM_MILVUS_CONNECTION,
-            drop_old=True,
+            persist_directory=CHROMA_PERSIST_DIRECTORY,
         )
         return vectorstore
 
@@ -231,26 +218,26 @@ def _clear(
     collection_name: str = COLLECTION_NAME,
 
 ):
-    """Clear the Milvus collection by dropping and recreating it."""
+    """Clear the Chroma collection by dropping and recreating it."""
     try:
-        Milvus(
-            embedding_function=OllamaEmbeddings(model=EMBEDDINGS_MODEL, base_url=OLLAMA_BASE_URL),
+        vectorstore = Chroma(
             collection_name=collection_name,
-            connection_args=CUSTOM_MILVUS_CONNECTION,
-            drop_old=True,
+            embedding_function=OllamaEmbeddings(model=EMBEDDINGS_MODEL, base_url=OLLAMA_BASE_URL),
+            persist_directory=CHROMA_PERSIST_DIRECTORY,
         )
+        vectorstore._client.delete_collection(name=collection_name)
+        vectorstore._client.create_collection(name=collection_name)
         print(f"[clear] Collection '{collection_name}' cleared.")
     except Exception as e:
         print(f"[clear] Failed to clear vector store: {e}")
 
 
 def get_retriever():
-    """Return the retriever object of the Milvus vector store."""
-    vectorstore = Milvus(
-        embedding_function=OllamaEmbeddings(model=EMBEDDINGS_MODEL, base_url=OLLAMA_BASE_URL),
-
+    """Return the retriever object of the Chroma vector store."""
+    vectorstore = Chroma(
         collection_name=COLLECTION_NAME,
-        connection_args=CUSTOM_MILVUS_CONNECTION,
+        embedding_function=OllamaEmbeddings(model=EMBEDDINGS_MODEL, base_url=OLLAMA_BASE_URL),
+        persist_directory=CHROMA_PERSIST_DIRECTORY,
     )
     retriever = vectorstore.as_retriever()
     return retriever

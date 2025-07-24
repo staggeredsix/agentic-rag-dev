@@ -98,16 +98,8 @@ Use these details if you want to modify the application, e.g. by configuring pro
 1. Set up a Linux box with an NVIDIA GPU and Docker.
 2. Deploy an Ollama container or an NVIDIA NIM on that host.
    - The compose file automatically pulls the model specified by `OLLAMA_MODEL` in `variables.env` when the Ollama container starts. Change this value to use a different LLM.
-3. Start the Milvus container from `compose.yaml` using Docker Compose, or build a monolithic image from `docker/milvus`.
-   - Build the single-container image with `docker build -t agentic-milvus docker/milvus`.
-   - Run it with `docker run -p 19530:19530 -p 9091:9091 -p 9000:9000 -p 2379:2379 agentic-milvus`.
-   - The compose file configures Milvus to run in standalone mode with GPU support.
-   - The `milvus` service is multi-arch and works on arm64 systems including NVIDIA Blackwell.
-
-   - Milvus uses an **internal etcd** service at `http://etcd:2379` by default. Set `ETCD_ENDPOINTS` if you want to connect to a different etcd instance.
-   - If Milvus fails to start or connect, see [Milvus Troubleshooting](agentic-rag-docs/milvus-troubleshooting.md).
-
-4. Configure the chat app to use the self-hosted endpoint.
+3. Documents are embedded into a local Chroma vector database stored under `data/`.
+   No additional vector database services are required.
 
 
 
