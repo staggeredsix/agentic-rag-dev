@@ -70,7 +70,7 @@ docker run -d --name ollama \
   --gpus all --restart unless-stopped \
   -p <remote-port>:11434 \
   -v ollama_data:/root/.ollama \
-  -e OLLAMA_MODEL=llama3:8b-instruct \
+  -e OLLAMA_MODEL=llama3-chatqa:8b \
   ollama/ollama:latest
 
 # Make sure it is running properly
@@ -98,7 +98,7 @@ You will need the remote ip, ``<remote-ip>``, and the remote port, ``<remote-por
 
 curl -X POST http://<remote-ip>:<remote-port>/api/generate \
   -H "Content-Type: application/json" \
-  -d '{"model": "llama3:8b-instruct", "prompt": "Hello, Ollama!"}'
+  -d '{"model": "llama3-chatqa:8b", "prompt": "Hello, Ollama!"}'
 ```
 
 

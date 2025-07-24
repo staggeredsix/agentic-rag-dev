@@ -30,7 +30,7 @@ import shutil
 import mimetypes
 
 # Default model for local embeddings
-EMBEDDINGS_MODEL = 'llama3:8b-instruct'
+EMBEDDINGS_MODEL = 'llama3-chatqa:8b'
 # Base URL for the Ollama service. Defaults to the service name used in the
 # docker compose network.
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://ollama:11434")

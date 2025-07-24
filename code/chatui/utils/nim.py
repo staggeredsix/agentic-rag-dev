@@ -24,10 +24,10 @@ class CustomChatOpenAI(BaseChatModel):
 
     custom_endpoint: str = Field(None, description='Endpoint of self-hosted Ollama service')
     port: Optional[str] = "11434"
-    model_name: Optional[str] = "phi4-reasoning:14b"
+    model_name: Optional[str] = "llama3-chatqa:8b"
     temperature: Optional[float] = 0.0
 
-    def __init__(self, custom_endpoint, port="11434", model_name="phi4-reasoning:14b",
+    def __init__(self, custom_endpoint, port="11434", model_name="llama3-chatqa:8b",
                  temperature=0.0, **kwargs):
         super().__init__(**kwargs)
         self.custom_endpoint = custom_endpoint

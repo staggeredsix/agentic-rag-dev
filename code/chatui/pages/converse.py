@@ -276,7 +276,7 @@ def build_page(client: chat_client.ChatClient) -> gr.Blocks:
                                         ##### Use the Models tab to configure individual model components
                                         - All models are configured for self-hosted Ollama endpoints
                                         - Configure the IP/hostname and port for each component
-                                        - Default models: Router/Retrieval/Generator use phi4-reasoning:14b, Hallucination/Answer use llama3-chatqa:8b
+                                        - Default models: all components use llama3-chatqa:8b
                                         - (optional) Customize component behavior by changing the prompts
                                         """
                             )
