@@ -36,6 +36,7 @@ EMBEDDINGS_MODEL = 'llama3:8b-instruct'
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://ollama:11434")
 
 # Chroma configuration
+
 import re
 
 DEFAULT_COLLECTION_NAME = "rag-chroma"
