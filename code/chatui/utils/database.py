@@ -18,7 +18,7 @@ from langchain_community.document_loaders import (
     WebBaseLoader,
     UnstructuredPDFLoader,
     TextLoader,
-    CSVLoader 
+    CSVLoader,
 )
 from langchain_milvus import Milvus
 from langchain_ollama import OllamaEmbeddings
@@ -44,6 +44,13 @@ CUSTOM_MILVUS_CONNECTION = {
     "host": MILVUS_HOST,
     "port": int(MILVUS_PORT),
 }
+
+# Milvus collection configuration
+import re
+
+DEFAULT_COLLECTION_NAME = "rag_milvus"
+RAW_COLLECTION_NAME = os.getenv("MILVUS_COLLECTION_NAME", DEFAULT_COLLECTION_NAME)
+COLLECTION_NAME = re.sub(r"[^0-9a-zA-Z_]", "_", RAW_COLLECTION_NAME)
 
 # Set the chunk size and overlap for the text splitter. Uses defaults but allows them to be set as environment variables.
 DEFAULT_CHUNK_SIZE = 250
@@ -118,7 +125,7 @@ def upload(urls: List[str]):
         vectorstore = Milvus.from_documents(
             documents=doc_splits,
             embedding=OllamaEmbeddings(model=EMBEDDINGS_MODEL, base_url=OLLAMA_BASE_URL),
-            collection_name="rag-milvus",
+            collection_name=COLLECTION_NAME,
             connection_args=CUSTOM_MILVUS_CONNECTION,
             drop_old=True,
         )
@@ -178,7 +185,7 @@ def embed_documents(doc_splits: List[Any]):
         vectorstore = Milvus.from_documents(
             doc_splits,
             OllamaEmbeddings(model=EMBEDDINGS_MODEL, base_url=OLLAMA_BASE_URL),
-            collection_name="rag-milvus",
+            collection_name=COLLECTION_NAME,
             connection_args=CUSTOM_MILVUS_CONNECTION,
             drop_old=True,
         )
@@ -216,7 +223,7 @@ def upload_files(file_paths: List[str]):
 
 
 def _clear(
-    collection_name: str = "rag-milvus",
+    collection_name: str = COLLECTION_NAME,
 ):
     """Clear the Milvus collection by dropping and recreating it."""
     try:
@@ -235,7 +242,7 @@ def get_retriever():
     """Return the retriever object of the Milvus vector store."""
     vectorstore = Milvus(
         embedding_function=OllamaEmbeddings(model=EMBEDDINGS_MODEL, base_url=OLLAMA_BASE_URL),
-        collection_name="rag-milvus",
+        collection_name=COLLECTION_NAME,
         connection_args=CUSTOM_MILVUS_CONNECTION,
     )
     retriever = vectorstore.as_retriever()
