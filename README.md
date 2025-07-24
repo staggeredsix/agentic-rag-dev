@@ -108,6 +108,8 @@ Use these details if you want to modify the application, e.g. by configuring pro
    - If Milvus fails to start or connect, see [Milvus Troubleshooting](agentic-rag-docs/milvus-troubleshooting.md).
 
 4. Configure the chat app to use the self-hosted endpoint.
+   - The app automatically connects to the `milvus` service defined in `compose.yaml`.
+     Set `MILVUS_HOST` only if your vector database runs elsewhere.
 
 
 
