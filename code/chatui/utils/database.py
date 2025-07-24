@@ -36,7 +36,10 @@ EMBEDDINGS_MODEL = 'llama3:8b-instruct'
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://ollama:11434")
 
 # Milvus connection configuration
-MILVUS_HOST = os.getenv("MILVUS_HOST", "localhost")  # Use service name from compose.yaml
+# Default to the `milvus` service name from the compose network so the
+# application works out of the box when all services are containerized.
+# Override with the MILVUS_HOST variable if connecting to a different host.
+MILVUS_HOST = os.getenv("MILVUS_HOST", "milvus")
 MILVUS_PORT = os.getenv("MILVUS_PORT", "19530")
 
 # Custom Milvus connection args
