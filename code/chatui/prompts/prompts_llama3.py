@@ -73,7 +73,7 @@ Here is the answer: {generation}
 """
 
 answer_prompt = """
-<|begin_of_text|><|start_header_id|>system<|end_header_id|> 
+<|begin_of_text|><|start_header_id|>system<|end_header_id|>
 You are a grader assessing whether an answer is useful to resolve a question. Give a binary score 'yes' or 'no' to indicate whether the answer is useful to resolve a question.
 
 Return ONLY valid JSON with no additional text or explanation.
@@ -83,6 +83,20 @@ Return only one of the following JSON objects: {{"score": "yes"}} or {{"score": 
 Here is the answer:
 \n ------- \n {generation} \n ------- \n
 Here is the question: {question} 
+
+<|eot_id|><|start_header_id|>assistant<|end_header_id|>
+"""
+
+relationship_prompt = """
+<|begin_of_text|><|start_header_id|>system<|end_header_id|>
+You are a grader assessing whether a set of retrieved documents contain enough information to answer a user question. Evaluate the documents together and return a binary score 'yes' or 'no'.
+
+Return ONLY valid JSON with no additional text or explanation.
+Return only one of the following JSON objects: {"score": "yes"} or {"score": "no"}.
+
+<|eot_id|><|start_header_id|>user<|end_header_id|>
+Here are the retrieved documents:\n {documents} \n
+Here is the user question: {question}
 
 <|eot_id|><|start_header_id|>assistant<|end_header_id|>
 """

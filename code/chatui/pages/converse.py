@@ -347,12 +347,17 @@ def build_page(client: chat_client.ChatClient) -> gr.Blocks:
                                     interactive=True
                                 )                                        
                                 
-                                with gr.Accordion("Configure the Retrieval Grader Prompt", 
+                                with gr.Accordion("Configure the Retrieval Grader Prompt",
                                                 elem_id="rag-inputs", open=False) as accordion_retrieval:
                                     prompt_retrieval = gr.Textbox(value=prompts_llama3.retrieval_prompt,
                                                                         lines=21,
                                                                         show_label=False,
                                                                         interactive=True)
+                                    prompt_relationship = gr.Textbox(value=prompts_llama3.relationship_prompt,
+                                                                      lines=21,
+                                                                      show_label=False,
+                                                                      interactive=True,
+                                                                      visible=False)
         
                             ###########################
                             ##### GENERATOR MODEL #####
@@ -775,6 +780,7 @@ def build_page(client: chat_client.ChatClient) -> gr.Blocks:
                                prompt_generator,
                                prompt_router,
                                prompt_retrieval,
+                               prompt_relationship,
                                prompt_hallucination,
                                prompt_answer,
                                nim_generator_ip,
@@ -800,6 +806,7 @@ def build_page(client: chat_client.ChatClient) -> gr.Blocks:
                                prompt_generator,
                                prompt_router,
                                prompt_retrieval,
+                               prompt_relationship,
                                prompt_hallucination,
                                prompt_answer,
                                nim_generator_ip,
@@ -825,6 +832,7 @@ def build_page(client: chat_client.ChatClient) -> gr.Blocks:
                                prompt_generator,
                                prompt_router,
                                prompt_retrieval,
+                               prompt_relationship,
                                prompt_hallucination,
                                prompt_answer,
                                nim_generator_ip,
@@ -850,6 +858,7 @@ def build_page(client: chat_client.ChatClient) -> gr.Blocks:
                                prompt_generator,
                                prompt_router,
                                prompt_retrieval,
+                               prompt_relationship,
                                prompt_hallucination,
                                prompt_answer,
                                nim_generator_ip,
@@ -875,6 +884,7 @@ def build_page(client: chat_client.ChatClient) -> gr.Blocks:
                                prompt_generator,
                                prompt_router,
                                prompt_retrieval,
+                               prompt_relationship,
                                prompt_hallucination,
                                prompt_answer,
                                nim_generator_ip,
@@ -931,6 +941,7 @@ def _stream_predict(
     prompt_generator: str,
     prompt_router: str,
     prompt_retrieval: str,
+    prompt_relationship: str,
     prompt_hallucination: str,
     prompt_answer: str,
     nim_generator_ip: str,
@@ -953,10 +964,11 @@ def _stream_predict(
 
     inputs = {"question": question, 
               "prompt_generator": prompt_generator, 
-              "prompt_router": prompt_router, 
-              "prompt_retrieval": prompt_retrieval, 
-              "prompt_hallucination": prompt_hallucination, 
-              "prompt_answer": prompt_answer, 
+              "prompt_router": prompt_router,
+              "prompt_retrieval": prompt_retrieval,
+              "prompt_relationship": prompt_relationship,
+              "prompt_hallucination": prompt_hallucination,
+              "prompt_answer": prompt_answer,
               "nim_generator_ip": nim_generator_ip,
               "nim_router_ip": nim_router_ip,
               "nim_retrieval_ip": nim_retrieval_ip,
