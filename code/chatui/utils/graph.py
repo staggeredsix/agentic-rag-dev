@@ -110,6 +110,7 @@ class GraphState(TypedDict):
     prompt_generator: str
     prompt_router: str
     prompt_retrieval: str
+    prompt_relationship: str
     prompt_hallucination: str
     prompt_answer: str
     router_use_nim: bool
@@ -250,8 +251,23 @@ def grade_documents(state):
             print("---GRADE: DOCUMENT NOT RELEVANT---")
             # We do not include the document in filtered_docs
             continue
-    # We set a flag to indicate that we want to run web search if insufficient relevant docs found
-    web_search = "Yes" if len(filtered_docs) < 1 else "No"
+    # Assess the collection of filtered docs to ensure they collectively answer the question
+    docs_content = "\n".join([d.page_content for d in filtered_docs])
+    relationship_prompt = PromptTemplate(
+        template=state["prompt_relationship"],
+        input_variables=["question", "documents"],
+    )
+    relationship_grader = relationship_prompt | llm | StrOutputParser()
+    try:
+        raw_output = relationship_grader.invoke({"question": question, "documents": docs_content})
+        print(f"Raw relationship output: {repr(raw_output)}")
+        score = extract_json_from_text(raw_output, "score")
+        docset_grade = score["score"]
+    except Exception as exc:
+        print(f"error parsing relationship grader output: {exc}")
+        docset_grade = "no"
+
+    web_search = "Yes" if len(filtered_docs) < 1 or docset_grade.lower() != "yes" else "No"
     return {"documents": filtered_docs, "question": question, "web_search": web_search}
 
 

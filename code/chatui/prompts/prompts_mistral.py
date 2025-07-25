@@ -60,7 +60,17 @@ Return only one of the following JSON objects: {{"score": "yes"}} or {{"score": 
 
 Here is the answer:
 \n ------- \n {generation} \n ------- \n
-Here is the question: {question} 
+Here is the question: {question}
+
+[/INST]
+"""
+
+relationship_prompt = """
+<s>[INST] You are a grader assessing whether a collection of retrieved documents contains enough information to answer a user question. Evaluate the documents together and respond with a binary 'yes' or 'no'.
+Return only one of the following JSON objects: {"score": "yes"} or {"score": "no"}. Do not include any extra text.
+
+Here are the retrieved documents:\n {documents} \n
+Here is the user question: {question}
 
 [/INST]
 """
