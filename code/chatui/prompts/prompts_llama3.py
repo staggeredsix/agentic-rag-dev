@@ -92,7 +92,7 @@ relationship_prompt = """
 You are a grader assessing whether a set of retrieved documents contain enough information to answer a user question. Evaluate the documents together and return a binary score 'yes' or 'no'.
 
 Return ONLY valid JSON with no additional text or explanation.
-Return only one of the following JSON objects: {"score": "yes"} or {"score": "no"}.
+Return only one of the following JSON objects: {{"score": "yes"}} or {{"score": "no"}}.
 
 <|eot_id|><|start_header_id|>user<|end_header_id|>
 Here are the retrieved documents:\n {documents} \n
