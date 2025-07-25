@@ -49,34 +49,39 @@ def extract_json_from_text(text: str, expected_key: str) -> dict:
     """
     # Clean the text
     text = text.strip()
-    
-    # Try to parse the text directly first
+
+    # Try to parse the entire string as JSON first
     try:
         return json.loads(text)
     except json.JSONDecodeError:
         pass
-    
-    # Handle incomplete JSON - try to reconstruct it
+
+    # Try to locate a JSON object within a longer string
+    match = re.search(r"\{.*?\}", text, re.DOTALL)
+    if match:
+        snippet = match.group(0)
+        try:
+            return json.loads(snippet)
+        except json.JSONDecodeError:
+            pass
+
+    # Handle bare key/value pairs such as '"datasource": "vectorstore"'
+    partial = re.search(rf'"?{expected_key}"?\s*:\s*"?(web_search|vectorstore|yes|no)"?', text, re.IGNORECASE)
+    if partial:
+        value = partial.group(1).lower()
+        if expected_key == "datasource":
+            return {"datasource": value}
+        return {"score": value}
+
+    # Fallback heuristics based on keyword detection
     if expected_key == "datasource":
-        # Look for datasource values
-        if "web_search" in text.lower():
-            return {"datasource": "web_search"}
-        elif "vectorstore" in text.lower():
+        if "vectorstore" in text.lower():
             return {"datasource": "vectorstore"}
-        # Try to extract from partial JSON
-        if '"vectorstore"' in text or 'vectorstore' in text:
-            return {"datasource": "vectorstore"}
-        else:
-            return {"datasource": "web_search"}  # Default fallback
-            
-    elif expected_key == "score":
-        # Look for score values
-        if "yes" in text.lower():
-            return {"score": "yes"}
-        elif "no" in text.lower():
-            return {"score": "no"}
-        else:
-            return {"score": "no"}  # Default fallback for safety
+        return {"datasource": "web_search"}
+
+    if "yes" in text.lower():
+        return {"score": "yes"}
+    return {"score": "no"}
     
     # Final fallback
     if expected_key == "datasource":
