@@ -7,8 +7,9 @@ services:
       - |
         ollama serve &
         sleep 5
-        # Pull the default models needed for the agentic RAG system
-        echo "Pulling llama3-chatqa:8b"
+        # Pull the default model needed for the agentic RAG system
+        echo "Pulling $OLLAMA_MODEL"
+        ollama pull "$OLLAMA_MODEL"
         echo "All models pulled successfully!"
         wait
     environment:
