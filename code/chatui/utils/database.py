@@ -29,6 +29,21 @@ import os
 import shutil
 import mimetypes
 
+# Disable Chroma telemetry if the posthog library is available. Newer versions of
+# Chroma use `posthog.capture()` with several arguments which can fail when
+# telemetry is patched with a simple single-argument stub. To avoid noisy errors
+# during document uploads, replace the capture function with a no-op that accepts
+# arbitrary parameters.
+try:  # pragma: no cover - best effort safeguard
+    import posthog
+
+    def _noop_capture(*_args, **_kwargs) -> None:
+        """Ignore all telemetry events."""
+
+    posthog.capture = _noop_capture  # type: ignore[attr-defined]
+except Exception:
+    pass
+
 # Default model for local embeddings
 EMBEDDINGS_MODEL = 'llama3-chatqa:8b'
 # Base URL for the Ollama service. Defaults to the service name used in the
