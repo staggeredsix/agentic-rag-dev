@@ -35,6 +35,7 @@ This guide focuses on running a lightweight Ollama container.
  - Good for experimentation and development
  - See [Ollama Setup Guide](#ollama-setup) below
  - GPU requirements vary by model but can be as low as 8 GB of vRAM
+ - Version 0.10.0 or newer is recommended to enable advanced sampling options
 
 ## General Prerequisites
 
@@ -62,7 +63,7 @@ Do the following in the **remote** terminal. If you encounter any errors, use an
 ```bash
 # Pull the Ollama container. Change the tag if you want a different one. 
 
-docker pull ollama/ollama:latest
+docker pull ollama/ollama:0.10.0
 
 # Run it and make sure to connect the port on the remote, <remote-port>, to the Ollama port in the container, 11434
 
@@ -71,7 +72,7 @@ docker run -d --name ollama \
   -p <remote-port>:11434 \
   -v ollama_data:/root/.ollama \
   -e OLLAMA_MODEL=llama3-chatqa:8b \
-  ollama/ollama:latest
+  ollama/ollama:0.10.0
 
 # Make sure it is running properly
 
