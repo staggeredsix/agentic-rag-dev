@@ -20,7 +20,7 @@ from langchain_community.document_loaders import (
     TextLoader,
     CSVLoader,
 )
-from langchain_community.vectorstores import Chroma
+from langchain_community.vectorstores import FAISS
 from langchain_ollama import OllamaEmbeddings
 
 from typing import Any, Dict, List, Tuple, Union
@@ -29,10 +29,10 @@ import os
 import shutil
 import mimetypes
 
-# Disable Chroma telemetry if the posthog library is available. Newer versions of
-# Chroma use `posthog.capture()` with several arguments which can fail when
-# telemetry is patched with a simple single-argument stub. To avoid noisy errors
-# during document uploads, replace the capture function with a no-op that accepts
+# Disable telemetry if the posthog library is available. Some vectorstore
+# implementations use `posthog.capture()` with several arguments which can fail
+# when telemetry is patched with a simple single-argument stub. To avoid noisy
+# errors during document uploads, replace the capture function with a no-op that accepts
 # arbitrary parameters.
 try:  # pragma: no cover - best effort safeguard
     import posthog
@@ -50,15 +50,9 @@ EMBEDDINGS_MODEL = 'llama3-chatqa:8b'
 # docker compose network.
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://ollama:11434")
 
-# Chroma configuration
+# Vector store configuration
 
-import re
-
-DEFAULT_COLLECTION_NAME = "rag-chroma"
-RAW_COLLECTION_NAME = os.getenv("CHROMA_COLLECTION_NAME", DEFAULT_COLLECTION_NAME)
-COLLECTION_NAME = re.sub(r"[^0-9a-zA-Z_]", "_", RAW_COLLECTION_NAME)
-
-CHROMA_PERSIST_DIRECTORY = os.getenv("CHROMA_PERSIST_DIRECTORY", "/project/data")
+FAISS_INDEX_PATH = os.getenv("FAISS_INDEX_PATH", "/project/data/faiss_index")
 
 # Set the chunk size and overlap for the text splitter. Uses defaults but allows them to be set as environment variables.
 DEFAULT_CHUNK_SIZE = 250
@@ -129,12 +123,11 @@ def upload(urls: List[str]):
         )
         doc_splits = text_splitter.split_documents(docs_list)
 
-        vectorstore = Chroma.from_documents(
+        vectorstore = FAISS.from_documents(
             documents=doc_splits,
-            collection_name=COLLECTION_NAME,
             embedding=OllamaEmbeddings(model=EMBEDDINGS_MODEL, base_url=OLLAMA_BASE_URL),
-            persist_directory=CHROMA_PERSIST_DIRECTORY,
         )
+        vectorstore.save_local(FAISS_INDEX_PATH)
         return vectorstore
 
     except Exception as e:
@@ -184,18 +177,15 @@ def split_documents(docs: List[Any]):
     return splitter.split_documents(docs)
 
 def embed_documents(doc_splits: List[Any]):
-    """Embed and store the split documents into a Chroma vectorstore."""
+    """Embed and store the split documents into a FAISS vectorstore."""
     try:
         print(f"[embed_documents] Embedding {len(doc_splits)} chunks using model: {EMBEDDINGS_MODEL}")
 
-        vectorstore = Chroma.from_documents(
+        vectorstore = FAISS.from_documents(
             doc_splits,
             OllamaEmbeddings(model=EMBEDDINGS_MODEL, base_url=OLLAMA_BASE_URL),
-
-            collection_name=COLLECTION_NAME,
-
-            persist_directory=CHROMA_PERSIST_DIRECTORY,
         )
+        vectorstore.save_local(FAISS_INDEX_PATH)
         return vectorstore
 
     except Exception as e:
@@ -229,31 +219,34 @@ def upload_files(file_paths: List[str]):
 
 
 
-def _clear(
-
-    collection_name: str = COLLECTION_NAME,
-
-):
-    """Clear the Chroma collection by dropping and recreating it."""
+def _clear():
+    """Delete the persisted FAISS index, if it exists."""
     try:
-        vectorstore = Chroma(
-            collection_name=collection_name,
-            embedding_function=OllamaEmbeddings(model=EMBEDDINGS_MODEL, base_url=OLLAMA_BASE_URL),
-            persist_directory=CHROMA_PERSIST_DIRECTORY,
-        )
-        vectorstore._client.delete_collection(name=collection_name)
-        vectorstore._client.create_collection(name=collection_name)
-        print(f"[clear] Collection '{collection_name}' cleared.")
+        if os.path.isdir(FAISS_INDEX_PATH):
+            shutil.rmtree(FAISS_INDEX_PATH)
+            print(f"[clear] Index at '{FAISS_INDEX_PATH}' cleared.")
     except Exception as e:
         print(f"[clear] Failed to clear vector store: {e}")
 
 
+class _EmptyRetriever:
+    def invoke(self, _query: str):
+        return []
+
+
 def get_retriever():
-    """Return the retriever object of the Chroma vector store."""
-    vectorstore = Chroma(
-        collection_name=COLLECTION_NAME,
-        embedding_function=OllamaEmbeddings(model=EMBEDDINGS_MODEL, base_url=OLLAMA_BASE_URL),
-        persist_directory=CHROMA_PERSIST_DIRECTORY,
-    )
-    retriever = vectorstore.as_retriever()
-    return retriever
+    """Return the retriever object of the FAISS vector store."""
+    try:
+        if os.path.isdir(FAISS_INDEX_PATH):
+            vectorstore = FAISS.load_local(
+                FAISS_INDEX_PATH,
+                embeddings=OllamaEmbeddings(
+                    model=EMBEDDINGS_MODEL, base_url=OLLAMA_BASE_URL
+                ),
+            )
+            return vectorstore.as_retriever()
+    except Exception as e:
+        print(f"[get_retriever] Failed to load index: {e}")
+
+    print(f"[get_retriever] Returning empty retriever.")
+    return _EmptyRetriever()

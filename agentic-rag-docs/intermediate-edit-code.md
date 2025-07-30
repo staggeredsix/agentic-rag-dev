@@ -137,35 +137,27 @@ DEFAULT_CHUNK_OVERLAP = 0  # Adjust this value to change overlap
 
 ## 🧩 How to Modify Vector Database Clearing Behavior
 
-You can modify how the vector database is cleared by adjusting the `delete_all` parameter in the `_clear()` function in `code/chatui/utils/database.py`.
+You can modify how the vector database is cleared by adjusting the `_clear()` function in `code/chatui/utils/database.py`.
 
 ### Files and sections you will need to edit
 - ``code/chatui/utils/database.py``
-    - Search: ``Clear the Chroma collection``
-    - Search: ``delete_all: bool = True``
+    - Search: ``Clear the FAISS index``
+    - Search: ``FAISS_INDEX_PATH``
 
 ### 1. Understand the Clearing Options
 
 The vector database clearing has two behaviors:
-- Basic clearing: Only clears the current Chroma collection
-- Full clearing (default): Clears both the collection and all associated files/directories
+- Basic clearing: Removes the current FAISS index directory
+- Full clearing (default): Deletes the index directory and all associated files
 
-### 2. Modify the Clear Function Parameter
+### 2. Modify the Clear Function
 
 - Find the ``_clear()`` function in ``code/chatui/utils/database.py``
-- Change the default value of `delete_all` to `False` to preserve previous searches:
-    ```python
-    def _clear(
-        persist_directory: str = "/project/data",
-        collection_name: str = "rag-chroma",
-        delete_all: bool = False  # Changed from True to False
-    ):
-    ```
+- The function removes the FAISS index located at ``FAISS_INDEX_PATH``. Update this path if you want to store the index elsewhere.
 
 ### Caveats
-- Setting `delete_all` to `False` will preserve files in the persist directory
-- Hidden files (starting with '.') are always preserved regardless of this setting
-- The current collection will still be cleared even with `delete_all = False`
+- Hidden files (starting with '.') are always preserved
+- The current index directory is removed when `_clear()` is called
 
 ## 🧩 How to Modify the Agent's Recursion Limit
 
