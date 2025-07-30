@@ -599,7 +599,7 @@ def build_page(client: chat_client.ChatClient) -> gr.Blocks:
                 answer_btn: gr.update(visible=True),
             }
 
-        """ These helper functions upload and clear the documents and webpages to/from the ChromaDB. """
+        """ These helper functions upload and clear the documents and webpages to/from the FAISS index. """
 
         def _upload_documents_files(files, progress=gr.Progress()):
             progress(0.25, desc="Initializing Task")

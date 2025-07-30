@@ -99,7 +99,7 @@ Use these details if you want to modify the application, e.g. by configuring pro
 2. Deploy an Ollama container or an NVIDIA NIM on that host.
    - The compose file automatically pulls the model specified by `OLLAMA_MODEL` in `variables.env` when the Ollama container starts. The default is `llama3-chatqa:8b`.
    - Change this value if you prefer a different LLM.
-3. Documents are embedded into a local Chroma vector database stored under `data/`.
+3. Documents are embedded into a local FAISS vector index stored under `data/`.
    No additional vector database services are required.
 
 
