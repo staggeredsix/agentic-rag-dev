@@ -1,6 +1,6 @@
 services:
   ollama:
-    image: ollama/ollama:latest
+    image: ollama/ollama:0.10.0
     runtime: nvidia
     entrypoint: ["/bin/bash", "-c"]
     command: 

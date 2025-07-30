@@ -16,5 +16,5 @@ tesseract==0.1.3
 nltk==3.8.1
 fastapi==0.111.0
 requests
-langchain-ollama==0.3.5
+langchain-ollama==0.3.6
 faiss-cpu>=1.7.4
